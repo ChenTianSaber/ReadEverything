@@ -1,0 +1,32 @@
+name: work
+version: 1.0.0+1
+publish_to: none
+description: 一个插件化聚合阅读器
+environment: 
+  sdk: '>=3.3.4 <4.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.6
+  flutter_inappwebview: ^6.0.0
+  code_text_field: ^1.1.0
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  get: 4.6.6
+  flutter: 
+    sdk: flutter
+  flutter_smart_dialog: ^4.9.7+5
+
+dev_dependencies: 
+  flutter_lints: ^3.0.0
+  isar_generator: ^3.1.0+1
+  build_runner: ^2.4.9
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  uses-material-design: true
+
+get_cli: 
+  separator: .
+  sub_folder: false
+
