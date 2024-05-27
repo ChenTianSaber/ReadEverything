@@ -24,8 +24,7 @@ class SourcesView extends GetView<SourcesController> {
               controller: controller.urlEditController,
               decoration: InputDecoration(hintText: "输入 url"),
             ),
-            ElevatedButton(onPressed: () => controller.checkData(), child: Text("验证数据")),
-            ElevatedButton(onPressed: () => controller.saveSource(), child: Text("添加源"))
+            ElevatedButton(onPressed: () => controller.checkData(), child: Text("添加源"))
           ],
         ),
       ),

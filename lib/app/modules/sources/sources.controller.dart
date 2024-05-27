@@ -54,11 +54,11 @@ class SourcesController extends GetxController {
   void checkData() async {
     if (headlessWebView?.isRunning() ?? false) {
       await headlessWebView?.webViewController?.evaluateJavascript(source: "getReaderData('${urlEditController.text}')");
+      // TODO 等待getReaderData返回
+      // TODO 校验类型是否为 List,内部格式是否正确，必填字段是否存在
+      // TODO 校验完成，则存入数据库
     } else {
       SmartDialog.showToast("Not running");
     }
   }
-
-  /// save this source
-  saveSource() {}
 }

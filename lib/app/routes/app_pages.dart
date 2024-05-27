@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/home/home.binding.dart';
 import '../modules/home/home.view.dart';
+import '../modules/sources/source_list/source_list.binding.dart';
+import '../modules/sources/source_list/source_list.view.dart';
 import '../modules/sources/sources.binding.dart';
 import '../modules/sources/sources.view.dart';
 
@@ -22,6 +24,13 @@ class AppPages {
       name: _Paths.SOURCES,
       page: () => const SourcesView(),
       binding: SourcesBinding(),
+      children: [
+        GetPage(
+          name: _Paths.SOURCE_LIST,
+          page: () => const SourceListView(),
+          binding: SourceListBinding(),
+        ),
+      ],
     ),
   ];
 }
