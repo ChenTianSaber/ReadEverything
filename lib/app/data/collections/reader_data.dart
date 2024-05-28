@@ -8,6 +8,10 @@ part 'reader_data.g.dart';
 class ReaderData {
   Id id = Isar.autoIncrement;
 
+  /// 原文地址url
+  /// @required
+  String? url;
+
   /// 标题
   String? title;
 
@@ -25,9 +29,6 @@ class ReaderData {
 
   /// 视频列表
   List<String>? videos;
-
-  /// 原文地址url
-  String? url;
 
   /// 关联源
   final source = IsarLink<Source>();
