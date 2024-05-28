@@ -161,7 +161,6 @@ ReaderData _readerDataDeserialize(
   final object = ReaderData();
   object.desc = reader.readStringOrNull(offsets[0]);
   object.html = reader.readStringOrNull(offsets[1]);
-  object.id = id;
   object.images = reader.readStringList(offsets[2]);
   object.markdown = reader.readStringOrNull(offsets[3]);
   object.title = reader.readStringOrNull(offsets[4]);
@@ -205,7 +204,6 @@ List<IsarLinkBase<dynamic>> _readerDataGetLinks(ReaderData object) {
 }
 
 void _readerDataAttach(IsarCollection<dynamic> col, Id id, ReaderData object) {
-  object.id = id;
   object.source.attach(col, col.isar.collection<Source>(), r'source', id);
 }
 

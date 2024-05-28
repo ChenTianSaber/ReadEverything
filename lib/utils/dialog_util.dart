@@ -11,4 +11,14 @@ class DialogUtil {
   static void hideLoading() {
     SmartDialog.dismiss(status: SmartStatus.loading);
   }
+
+  /// 展示 Toast
+  static void showToast(String msg, {VoidCallback? onDismiss}) {
+    SmartDialog.showToast(
+      msg,
+      onDismiss: onDismiss,
+      alignment: Alignment.center,
+      displayType: SmartToastType.last,
+    );
+  }
 }

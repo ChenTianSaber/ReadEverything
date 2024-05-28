@@ -1,12 +1,13 @@
 import 'package:isar/isar.dart';
 import 'package:work/app/data/collections/source.dart';
+import 'package:work/app/data/db/db_server.dart';
 
 part 'reader_data.g.dart';
 
 /// 信息源
 @collection
 class ReaderData {
-  Id id = Isar.autoIncrement;
+  Id get id => url == null ? Isar.autoIncrement : DBServer.fastHash(url!);
 
   /// 原文地址url
   /// @required
