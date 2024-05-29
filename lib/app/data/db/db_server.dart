@@ -166,6 +166,12 @@ class DBServerSource {
 }
 
 class DBServerReaderData {
+  /// 获取全部
+  static Future<List<ReaderData>> getAll() async {
+    List<ReaderData> data = (await DBServer().getAll<ReaderData>()) ?? [];
+    return data;
+  }
+
   /// 查找
   static Future<ReaderData?> getSourceFromUrl(String url) async {
     return await DBServer().getFromUrl<ReaderData>(url);

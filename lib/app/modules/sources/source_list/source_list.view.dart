@@ -18,7 +18,6 @@ class SourceListView extends GetView<SourceListController> {
         body: Obx(
           () => ListView.builder(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
             itemCount: controller.sources.length,
             itemBuilder: (BuildContext context, int index) {
               Source source = controller.sources[index];

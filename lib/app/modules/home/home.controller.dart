@@ -1,12 +1,16 @@
 import 'package:get/get.dart';
+import 'package:work/app/data/collections/reader_data.dart';
+import 'package:work/app/data/db/db_server.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
 
-  final count = 0.obs;
+  // 数据 List
+  RxList<ReaderData> dataList = RxList([]);
+
   @override
   void onInit() {
     super.onInit();
+    DBServerReaderData.getAll().then((value) => dataList.value = value);
   }
 
   @override
@@ -18,6 +22,4 @@ class HomeController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

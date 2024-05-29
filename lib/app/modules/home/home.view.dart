@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import 'package:get/get.dart';
+import 'package:work/app/data/collections/reader_data.dart';
 import 'package:work/app/routes/app_pages.dart';
 
 import 'home.controller.dart';
@@ -17,13 +18,37 @@ class HomeView extends GetView<HomeController> {
         centerTitle: true,
       ),
       body: Center(
-          child: Column(
-        children: [
-          ElevatedButton(onPressed: () => Get.toNamed(Routes.SOURCES), child: Text("添加源")),
-          ElevatedButton(onPressed: () => Get.toNamed(Routes.SOURCE_LIST), child: Text("管理源")),
-          ElevatedButton(onPressed: () => SmartDialog.showToast("Not implement"), child: Text("展示数据")),
-        ],
-      )),
+        child: Column(
+          children: [
+            ElevatedButton(onPressed: () => Get.toNamed(Routes.SOURCES), child: Text("添加源")),
+            ElevatedButton(onPressed: () => Get.toNamed(Routes.SOURCE_LIST), child: Text("管理源")),
+            Obx(
+              () => Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: controller.dataList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    ReaderData source = controller.dataList[index];
+                    return Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("${source.title}"),
+                            Text("${source.url}"),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
