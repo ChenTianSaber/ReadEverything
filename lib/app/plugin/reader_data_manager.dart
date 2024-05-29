@@ -41,7 +41,7 @@ class ReaderDataManager {
       var sources = await DBServerSource.getAll();
       for (Source source in sources) {
         if (source.ruleCode?.isNotEmpty == true) {
-          var result = await _createHeadlessWebView(source.ruleCode!);
+          var result = await _createHeadlessWebView(source.ruleCode!, source.url ?? "");
 
           if (!result) {
             print("_createHeadlessWebView 加载失败");
@@ -89,7 +89,7 @@ class ReaderDataManager {
     }
   }
 
-  static Future<bool> _createHeadlessWebView(String ruleHtml) async {
+  static Future<bool> _createHeadlessWebView(String ruleHtml, String sourceUrl) async {
     Mutex mtx = MutexFactory.getMutexForKey("_createHeadlessWebView");
     await mtx.take();
 
@@ -101,7 +101,7 @@ class ReaderDataManager {
       Future<bool> futureResponse = responseStream.first;
 
       _headlessWebView = HeadlessInAppWebView(
-          initialData: InAppWebViewInitialData(data: ruleHtml),
+          initialData: InAppWebViewInitialData(data: ruleHtml, baseUrl: WebUri(sourceUrl)),
           initialSettings: InAppWebViewSettings(
             isInspectable: kDebugMode,
             allowUniversalAccessFromFileURLs: true,

@@ -14,7 +14,6 @@ import 'package:work/utils/dialog_util.dart';
 import 'package:work/utils/stream_util.dart';
 
 class SourcesController extends GetxController {
-
   /// 无头浏览器
   HeadlessInAppWebView? headlessWebView;
 
@@ -53,7 +52,7 @@ class SourcesController extends GetxController {
     // 创建无头浏览器
     await headlessWebView?.dispose();
     headlessWebView = HeadlessInAppWebView(
-        initialData: InAppWebViewInitialData(data: htmlData),
+        initialData: InAppWebViewInitialData(data: htmlData, baseUrl: WebUri(urlEditController.text)),
         initialSettings: InAppWebViewSettings(
           isInspectable: kDebugMode,
           allowUniversalAccessFromFileURLs: true,
