@@ -21,16 +21,21 @@ class SourceListView extends GetView<SourceListController> {
             itemCount: controller.sources.length,
             itemBuilder: (BuildContext context, int index) {
               Source source = controller.sources[index];
-              return Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("${source.url}"),
-                      Text("${source.ruleName}"),
-                    ],
+              return InkWell(
+                onTap: (){
+
+                },
+                child: Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("${source.url}"),
+                        Text("${source.ruleName}"),
+                      ],
+                    ),
                   ),
                 ),
               );

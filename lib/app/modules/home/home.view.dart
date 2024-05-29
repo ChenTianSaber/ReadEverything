@@ -29,8 +29,14 @@ class HomeView extends GetView<HomeController> {
                   itemCount: controller.dataList.length,
                   itemBuilder: (BuildContext context, int index) {
                     ReaderData source = controller.dataList[index];
-                    return Container(
-                      color: Colors.white,
+                    return InkWell(
+                      onTap: (){
+                        // TODO 顶部元素 source 的信息
+                        // TODO 展示元素从上到下：title -> desc(缩起) -> markdown/html(展开) -> images/videos
+                        // TODO 展示优先级 markdown > html
+                        // TODO 点击则是打开 url
+
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(
