@@ -138,6 +138,12 @@ extension DBServerHelp on DBServer {
 }
 
 class DBServerSource {
+  /// 获取全部
+  static Future<List<Source>> getAll() async {
+    List<Source> sources = (await DBServer().getAll<Source>()) ?? [];
+    return sources;
+  }
+
   /// 查找
   static Future<Source?> getSourceFromUrl(String url) async {
     return await DBServer().getFromUrl<Source>(url);

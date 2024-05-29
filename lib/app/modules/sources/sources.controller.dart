@@ -9,12 +9,11 @@ import 'package:get/get.dart';
 import 'package:work/app/data/beans/reader_data_entity.dart';
 import 'package:work/app/data/collections/source.dart';
 import 'package:work/app/data/db/db_server.dart';
+import 'package:work/app/plugin/reader_data_manager.dart';
 import 'package:work/utils/dialog_util.dart';
 import 'package:work/utils/stream_util.dart';
 
 class SourcesController extends GetxController {
-  /// 结果监听流
-  static final StreamController<List<dynamic>> _resultStream = StreamController.broadcast();
 
   /// 无头浏览器
   HeadlessInAppWebView? headlessWebView;
@@ -68,9 +67,9 @@ class SourcesController extends GetxController {
               callback: (result) {
                 // print("getReaderData:--->\n$result");
                 if (result.isNotEmpty) {
-                  _resultStream.add(result[0]);
+                  ReaderDataManager.resultStream.add(result[0]);
                 } else {
-                  _resultStream.add([]);
+                  ReaderDataManager.resultStream.add([]);
                 }
               });
 
@@ -78,13 +77,13 @@ class SourcesController extends GetxController {
           controller.addJavaScriptHandler(
               handlerName: 'reader-fail',
               callback: (_) {
-                _resultStream.add([]);
+                ReaderDataManager.resultStream.add([]);
               });
         },
         onConsoleMessage: (_, consoleMessage) {
           print("onConsoleMessage:[$consoleMessage]");
           if (consoleMessage.messageLevel == ConsoleMessageLevel.ERROR) {
-            _resultStream.add([]);
+            ReaderDataManager.resultStream.add([]);
           }
         },
         onLoadStart: (_, url) async {
@@ -113,7 +112,7 @@ class SourcesController extends GetxController {
 
       try {
         final sourceUrl = urlEditController.text;
-        var responseStream = _resultStream.stream;
+        var responseStream = ReaderDataManager.resultStream.stream;
         Future<List<dynamic>> futureResponse = responseStream.first;
         await headlessWebView?.webViewController?.evaluateJavascript(source: "getReaderData('$sourceUrl')");
 

@@ -1,5 +1,9 @@
 import 'package:get/get.dart';
 
+import '../modules/detail/detail.binding.dart';
+import '../modules/detail/detail.view.dart';
+import '../modules/detail/html/html.binding.dart';
+import '../modules/detail/html/html.view.dart';
 import '../modules/home/home.binding.dart';
 import '../modules/home/home.view.dart';
 import '../modules/sources/source_list/source_list.binding.dart';
@@ -12,7 +16,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.SOURCES;
+  static const INITIAL = Routes.HOME;
 
   static final routes = [
     GetPage(
@@ -29,6 +33,18 @@ class AppPages {
           name: _Paths.SOURCE_LIST,
           page: () => const SourceListView(),
           binding: SourceListBinding(),
+        ),
+      ],
+    ),
+    GetPage(
+      name: _Paths.DETAIL,
+      page: () => const DetailView(),
+      binding: DetailBinding(),
+      children: [
+        GetPage(
+          name: _Paths.HTML,
+          page: () => const HtmlView(),
+          binding: HtmlBinding(),
         ),
       ],
     ),

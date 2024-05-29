@@ -1,12 +1,14 @@
 import 'package:get/get.dart';
+import 'package:work/app/data/collections/source.dart';
+import 'package:work/app/data/db/db_server.dart';
 
 class SourceListController extends GetxController {
-  //TODO: Implement SourceListController
+  RxList<Source> sources = RxList([]);
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
+    DBServerSource.getAll().then((value) => sources.value = value);
   }
 
   @override
@@ -18,6 +20,4 @@ class SourceListController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

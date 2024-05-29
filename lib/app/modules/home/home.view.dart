@@ -19,7 +19,8 @@ class HomeView extends GetView<HomeController> {
       body: Center(
           child: Column(
         children: [
-          ElevatedButton(onPressed: () => Get.toNamed(Routes.SOURCES), child: Text("管理源")),
+          ElevatedButton(onPressed: () => Get.toNamed(Routes.SOURCES), child: Text("添加源")),
+          ElevatedButton(onPressed: () => Get.toNamed(Routes.SOURCE_LIST), child: Text("管理源")),
           ElevatedButton(onPressed: () => SmartDialog.showToast("Not implement"), child: Text("展示数据")),
         ],
       )),
