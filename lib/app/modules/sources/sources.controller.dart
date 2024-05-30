@@ -10,6 +10,7 @@ import 'package:work/app/data/beans/reader_data_entity.dart';
 import 'package:work/app/data/collections/source.dart';
 import 'package:work/app/data/db/db_server.dart';
 import 'package:work/app/plugin/reader_data_manager.dart';
+import 'package:work/utils/common_utils.dart';
 import 'package:work/utils/dialog_util.dart';
 import 'package:work/utils/stream_util.dart';
 
@@ -52,7 +53,7 @@ class SourcesController extends GetxController {
     // 创建无头浏览器
     await headlessWebView?.dispose();
     headlessWebView = HeadlessInAppWebView(
-        initialData: InAppWebViewInitialData(data: htmlData, baseUrl: WebUri(urlEditController.text)),
+        initialData: InAppWebViewInitialData(data: htmlData, baseUrl: WebUri(CommonUtils.getHostLink(urlEditController.text))),
         initialSettings: InAppWebViewSettings(
           isInspectable: kDebugMode,
           allowUniversalAccessFromFileURLs: true,

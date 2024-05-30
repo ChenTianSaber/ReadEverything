@@ -6,6 +6,7 @@ import 'package:work/app/data/beans/reader_data_entity.dart';
 import 'package:work/app/data/collections/reader_data.dart';
 import 'package:work/app/data/collections/source.dart';
 import 'package:work/app/data/db/db_server.dart';
+import 'package:work/utils/common_utils.dart';
 import 'package:work/utils/stream_util.dart';
 
 class ReaderDataManager {
@@ -101,7 +102,7 @@ class ReaderDataManager {
       Future<bool> futureResponse = responseStream.first;
 
       _headlessWebView = HeadlessInAppWebView(
-          initialData: InAppWebViewInitialData(data: ruleHtml, baseUrl: WebUri(sourceUrl)),
+          initialData: InAppWebViewInitialData(data: ruleHtml, baseUrl: WebUri(CommonUtils.getHostLink(sourceUrl))),
           initialSettings: InAppWebViewSettings(
             isInspectable: kDebugMode,
             allowUniversalAccessFromFileURLs: true,
