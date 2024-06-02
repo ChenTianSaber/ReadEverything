@@ -53,103 +53,139 @@ class HomeView extends GetView<HomeController> {
 
   Widget _buildBottomBar(BuildContext context) {
     return Obx(
-      () => Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          children: [
-            Container(
-              height: 50,
+      () => Column(
+        children: [
+          Divider(
+            height: 0.5,
+          ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.grey.withOpacity(0.5),
+                    width: 0.5,
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 10,
+                      offset: Offset(0, 0), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          SmartDialog.showAttach(
+                            targetContext: context,
+                            keepSingle: true,
+                            alignment: Alignment.topLeft,
+                            bindWidget: context,
+                            maskColor: Colors.transparent,
+                            builder: (context) => Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Container(
+                                color: Colors.white,
+                                width: 120,
+                                child: Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Get.toNamed(Routes.SOURCE_LIST);
+                                        SmartDialog.dismiss();
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        child: Center(
+                                          child: Text("管理源"),
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Get.toNamed(Routes.SOURCES);
+                                        SmartDialog.dismiss();
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        child: Center(child: Text("添加源")),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        child: Icon(Icons.settings_suggest_outlined),
+                      ),
+                      Expanded(
+                          child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 36.0),
+                        child: Text(
+                          "lastupdate:2024-6-2 16:58:23lastupdate:2024-6-2 16:58:23lastupdate:2024-6-2 16:58:23lastupdate:2024-6-2 16:58:23",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 12),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )),
+                      GestureDetector(
+                        onTap: () {
+                          DialogUtil.showToast("刷新");
+                        },
+                        child: Icon(Icons.refresh_rounded),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            height: 48,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 48.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      SmartDialog.showAttach(
-                        targetContext: context,
-                        keepSingle: true,
-                        alignment: Alignment.topLeft,
-                        bindWidget: context,
-                        maskColor: Colors.transparent,
-                        builder: (context) => Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Container(
-                            color: Colors.white,
-                            width: 120,
-                            child: Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.toNamed(Routes.SOURCE_LIST);
-                                    SmartDialog.dismiss();
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    child: Center(
-                                      child: Text("管理源"),
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.toNamed(Routes.SOURCES);
-                                    SmartDialog.dismiss();
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    child: Center(child: Text("添加源")),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    child: Text("Source"),
-                  ),
-                  Text("lastupdate:2024-6-2 16:58:23"),
-                  Text("Refresh")
+                  _buildBottomBarButton(0, Icons.access_time_outlined, Icons.access_time_filled_rounded),
+                  _buildBottomBarButton(1, Icons.book_outlined, Icons.book_rounded),
+                  _buildBottomBarButton(2, Icons.collections_bookmark_outlined, Icons.collections_bookmark_rounded),
                 ],
               ),
             ),
-            Container(
-              height: 50,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      controller.changePage(0);
-                    },
-                    child: Text(
-                      "History",
-                      style: controller.curIndex.value == 0 ? TextStyle(fontWeight: FontWeight.bold, color: Colors.red) : TextStyle(),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      controller.changePage(1);
-                    },
-                    child: Text(
-                      "Library",
-                      style: controller.curIndex.value == 1 ? TextStyle(fontWeight: FontWeight.bold, color: Colors.red) : TextStyle(),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      controller.changePage(2);
-                    },
-                    child: Text(
-                      "Collection",
-                      style: controller.curIndex.value == 2 ? TextStyle(fontWeight: FontWeight.bold, color: Colors.red) : TextStyle(),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomBarButton(int index, IconData icon, IconData selectIcon) {
+    return GestureDetector(
+      onTap: () {
+        controller.changePage(index);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            color: controller.curIndex.value == index ? Colors.grey.withOpacity(0.3) : Colors.transparent,
+            borderRadius: BorderRadius.all(
+              Radius.circular(30),
+            )),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 22),
+          child: Icon(controller.curIndex.value == index ? selectIcon : icon),
         ),
       ),
     );
