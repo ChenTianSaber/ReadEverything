@@ -134,7 +134,7 @@ class HomeView extends GetView<HomeController> {
                           child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 36.0),
                         child: Text(
-                          "lastupdate:2024-6-2 16:58:23lastupdate:2024-6-2 16:58:23lastupdate:2024-6-2 16:58:23lastupdate:2024-6-2 16:58:23",
+                          "还剩 18 未读\n上次更新: 2024-6-2 14:38:42",
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 12),
                           maxLines: 2,
