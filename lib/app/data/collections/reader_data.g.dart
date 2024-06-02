@@ -17,44 +17,54 @@ const ReaderDataSchema = CollectionSchema(
   name: r'ReaderData',
   id: -7409786796769065316,
   properties: {
-    r'desc': PropertySchema(
+    r'author': PropertySchema(
       id: 0,
+      name: r'author',
+      type: IsarType.string,
+    ),
+    r'desc': PropertySchema(
+      id: 1,
       name: r'desc',
       type: IsarType.string,
     ),
     r'html': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'html',
       type: IsarType.string,
     ),
     r'images': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'images',
       type: IsarType.stringList,
     ),
     r'listType': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'listType',
       type: IsarType.long,
       enumMap: _ReaderDatalistTypeEnumValueMap,
     ),
     r'markdown': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'markdown',
       type: IsarType.string,
     ),
+    r'publishTime': PropertySchema(
+      id: 6,
+      name: r'publishTime',
+      type: IsarType.long,
+    ),
     r'title': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'title',
       type: IsarType.string,
     ),
     r'url': PropertySchema(
-      id: 6,
+      id: 8,
       name: r'url',
       type: IsarType.string,
     ),
     r'videos': PropertySchema(
-      id: 7,
+      id: 9,
       name: r'videos',
       type: IsarType.stringList,
     )
@@ -86,6 +96,12 @@ int _readerDataEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.author;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   {
     final value = object.desc;
     if (value != null) {
@@ -149,14 +165,16 @@ void _readerDataSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.desc);
-  writer.writeString(offsets[1], object.html);
-  writer.writeStringList(offsets[2], object.images);
-  writer.writeLong(offsets[3], object.listType?.value);
-  writer.writeString(offsets[4], object.markdown);
-  writer.writeString(offsets[5], object.title);
-  writer.writeString(offsets[6], object.url);
-  writer.writeStringList(offsets[7], object.videos);
+  writer.writeString(offsets[0], object.author);
+  writer.writeString(offsets[1], object.desc);
+  writer.writeString(offsets[2], object.html);
+  writer.writeStringList(offsets[3], object.images);
+  writer.writeLong(offsets[4], object.listType?.value);
+  writer.writeString(offsets[5], object.markdown);
+  writer.writeLong(offsets[6], object.publishTime);
+  writer.writeString(offsets[7], object.title);
+  writer.writeString(offsets[8], object.url);
+  writer.writeStringList(offsets[9], object.videos);
 }
 
 ReaderData _readerDataDeserialize(
@@ -166,15 +184,17 @@ ReaderData _readerDataDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = ReaderData();
-  object.desc = reader.readStringOrNull(offsets[0]);
-  object.html = reader.readStringOrNull(offsets[1]);
-  object.images = reader.readStringList(offsets[2]);
+  object.author = reader.readStringOrNull(offsets[0]);
+  object.desc = reader.readStringOrNull(offsets[1]);
+  object.html = reader.readStringOrNull(offsets[2]);
+  object.images = reader.readStringList(offsets[3]);
   object.listType =
-      _ReaderDatalistTypeValueEnumMap[reader.readLongOrNull(offsets[3])];
-  object.markdown = reader.readStringOrNull(offsets[4]);
-  object.title = reader.readStringOrNull(offsets[5]);
-  object.url = reader.readStringOrNull(offsets[6]);
-  object.videos = reader.readStringList(offsets[7]);
+      _ReaderDatalistTypeValueEnumMap[reader.readLongOrNull(offsets[4])];
+  object.markdown = reader.readStringOrNull(offsets[5]);
+  object.publishTime = reader.readLongOrNull(offsets[6]);
+  object.title = reader.readStringOrNull(offsets[7]);
+  object.url = reader.readStringOrNull(offsets[8]);
+  object.videos = reader.readStringList(offsets[9]);
   return object;
 }
 
@@ -190,17 +210,21 @@ P _readerDataDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readStringList(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
+      return (reader.readStringList(offset)) as P;
+    case 4:
       return (_ReaderDatalistTypeValueEnumMap[reader.readLongOrNull(offset)])
           as P;
-    case 4:
-      return (reader.readStringOrNull(offset)) as P;
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 7:
+      return (reader.readStringOrNull(offset)) as P;
+    case 8:
+      return (reader.readStringOrNull(offset)) as P;
+    case 9:
       return (reader.readStringList(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -309,6 +333,154 @@ extension ReaderDataQueryWhere
 
 extension ReaderDataQueryFilter
     on QueryBuilder<ReaderData, ReaderData, QFilterCondition> {
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> authorIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'author',
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      authorIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'author',
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> authorEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'author',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> authorGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'author',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> authorLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'author',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> authorBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'author',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> authorStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'author',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> authorEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'author',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> authorContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'author',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> authorMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'author',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> authorIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'author',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      authorIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'author',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> descIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1117,6 +1289,80 @@ extension ReaderDataQueryFilter
     });
   }
 
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      publishTimeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'publishTime',
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      publishTimeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'publishTime',
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      publishTimeEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'publishTime',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      publishTimeGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'publishTime',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      publishTimeLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'publishTime',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      publishTimeBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'publishTime',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> titleIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1673,6 +1919,18 @@ extension ReaderDataQueryLinks
 
 extension ReaderDataQuerySortBy
     on QueryBuilder<ReaderData, ReaderData, QSortBy> {
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByAuthor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'author', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByAuthorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'author', Sort.desc);
+    });
+  }
+
   QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'desc', Sort.asc);
@@ -1721,6 +1979,18 @@ extension ReaderDataQuerySortBy
     });
   }
 
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByPublishTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'publishTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByPublishTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'publishTime', Sort.desc);
+    });
+  }
+
   QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -1748,6 +2018,18 @@ extension ReaderDataQuerySortBy
 
 extension ReaderDataQuerySortThenBy
     on QueryBuilder<ReaderData, ReaderData, QSortThenBy> {
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByAuthor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'author', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByAuthorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'author', Sort.desc);
+    });
+  }
+
   QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'desc', Sort.asc);
@@ -1808,6 +2090,18 @@ extension ReaderDataQuerySortThenBy
     });
   }
 
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByPublishTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'publishTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByPublishTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'publishTime', Sort.desc);
+    });
+  }
+
   QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -1835,6 +2129,13 @@ extension ReaderDataQuerySortThenBy
 
 extension ReaderDataQueryWhereDistinct
     on QueryBuilder<ReaderData, ReaderData, QDistinct> {
+  QueryBuilder<ReaderData, ReaderData, QDistinct> distinctByAuthor(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'author', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<ReaderData, ReaderData, QDistinct> distinctByDesc(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1868,6 +2169,12 @@ extension ReaderDataQueryWhereDistinct
     });
   }
 
+  QueryBuilder<ReaderData, ReaderData, QDistinct> distinctByPublishTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'publishTime');
+    });
+  }
+
   QueryBuilder<ReaderData, ReaderData, QDistinct> distinctByTitle(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1894,6 +2201,12 @@ extension ReaderDataQueryProperty
   QueryBuilder<ReaderData, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<ReaderData, String?, QQueryOperations> authorProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'author');
     });
   }
 
@@ -1924,6 +2237,12 @@ extension ReaderDataQueryProperty
   QueryBuilder<ReaderData, String?, QQueryOperations> markdownProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'markdown');
+    });
+  }
+
+  QueryBuilder<ReaderData, int?, QQueryOperations> publishTimeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'publishTime');
     });
   }
 

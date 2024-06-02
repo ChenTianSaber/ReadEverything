@@ -36,6 +36,12 @@ class ReaderData {
   @Enumerated(EnumType.value, 'value')
   ListType? listType;
 
+  /// 发布时间（用于排序）
+  int? publishTime;
+
+  /// 作者名字
+  String? author;
+
   /// 关联源
   final source = IsarLink<Source>();
 }

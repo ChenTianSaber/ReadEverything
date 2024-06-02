@@ -7,6 +7,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:work/app/components/keep_alive.dart';
 import 'package:work/app/data/collections/reader_data.dart';
+import 'package:work/app/data/collections/source.dart';
 import 'package:work/app/routes/app_pages.dart';
 import 'package:work/app/utils/dialog_util.dart';
 
@@ -179,13 +180,16 @@ class HomeView extends GetView<HomeController> {
       },
       child: Container(
         decoration: BoxDecoration(
-            color: controller.curIndex.value == index ? Colors.grey.withOpacity(0.3) : Colors.transparent,
+            color: controller.curIndex.value == index ? Colors.black26.withOpacity(0.3) : Colors.transparent,
             borderRadius: BorderRadius.all(
               Radius.circular(30),
             )),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 22),
-          child: Icon(controller.curIndex.value == index ? selectIcon : icon),
+          child: Icon(
+            controller.curIndex.value == index ? selectIcon : icon,
+            color: controller.curIndex.value == index ? Colors.black87 : Colors.black54,
+          ),
         ),
       ),
     );
@@ -208,7 +212,17 @@ class HomeView extends GetView<HomeController> {
       itemCount: controller.dataList.length,
       itemBuilder: (BuildContext context, int index) {
         ReaderData data = controller.dataList[index];
-        return InkWell(
+        return _buildListItem(data);
+      },
+    );
+  }
+
+  Widget _buildListItem(ReaderData data) {
+    Source? source = data.source.value;
+    return Column(
+      children: [
+        Divider(height: 0.2),
+        InkWell(
           onTap: () async {
             if (data.url?.isNotEmpty == true) {
               // TODO 顶部元素 source 的信息
@@ -225,13 +239,28 @@ class HomeView extends GetView<HomeController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("${data.title}"),
-                Text("${data.url}"),
+                // TODO 源名称
+                // TODO 作者 时间
+                // TODO 标题
+                // TODO 内容
+                // TODO 视频 + 图片
+                Text(
+                  "${data.title}",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
+                ),
+                Text(
+                  "${data.url}",
+                  style: TextStyle(fontSize: 16, color: Colors.black87),
+                ),
               ],
             ),
           ),
-        );
-      },
+        ),
+        Divider(height: 0.2),
+        SizedBox(
+          height: 16,
+        )
+      ],
     );
   }
 }
