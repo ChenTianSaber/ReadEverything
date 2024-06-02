@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:get/get.dart';
+import 'package:work/utils/dialog_util.dart';
 
 import 'sources.controller.dart';
 
@@ -64,6 +65,8 @@ class SourcesView extends GetView<SourcesController> {
                     height: 26,
                     child: ElevatedButton(
                       onPressed: () => controller.chooseRule(),
+                      // TODO 跳转代码编辑器页
+                      onLongPress: () => DialogUtil.showToast("查看代码，施工中"),
                       child: Text(
                         controller.ruleHtml.value.isNotEmpty ? "已选择: ${controller.ruleTitle.value}" : "选取规则",
                         style: TextStyle(fontSize: 12),

@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:work/app/data/beans/reader_data_entity.dart';
 import 'package:work/app/data/collections/source.dart';
@@ -48,60 +51,117 @@ class SourcesController extends GetxController {
   /// 最终都会转成 String 存入数据库
   /// TODO 这里现暂时只从 assets 取，用作测试
   Future<void> chooseRule() async {
-    DialogUtil.showLoading();
-    String htmlData = await rootBundle.loadString('assets/rules/rss.html');
-    // 创建无头浏览器
-    await headlessWebView?.dispose();
-    headlessWebView = HeadlessInAppWebView(
-        initialData: InAppWebViewInitialData(data: htmlData, baseUrl: WebUri(CommonUtils.getHostLink(urlEditController.text))),
-        initialSettings: InAppWebViewSettings(
-          isInspectable: kDebugMode,
-          allowUniversalAccessFromFileURLs: true,
-          allowFileAccessFromFileURLs: true,
-        ),
-        onWebViewCreated: (controller) {
-          /// 监听 js 返回
-          /// 成功
-          controller.addJavaScriptHandler(
-              handlerName: 'reader-success',
-              callback: (result) {
-                // print("getReaderData:--->\n$result");
-                if (result.isNotEmpty) {
-                  ReaderDataManager.resultStream.add(result[0]);
-                } else {
-                  ReaderDataManager.resultStream.add([]);
-                }
-              });
+    // TODO 弹出选择弹窗
+    DialogUtil.bottomSheet(Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        GestureDetector(
+          onTap: () async {
+            Get.back();
+            FilePickerResult? result = await FilePicker.platform.pickFiles(
+              type: FileType.custom,
+              allowedExtensions: ['html', 'HTML'],
+            );
 
-          /// 失败
-          controller.addJavaScriptHandler(
-              handlerName: 'reader-fail',
-              callback: (_) {
-                ReaderDataManager.resultStream.add([]);
-              });
-        },
-        onConsoleMessage: (_, consoleMessage) {
-          print("onConsoleMessage:[$consoleMessage]");
-          if (consoleMessage.messageLevel == ConsoleMessageLevel.ERROR) {
-            ReaderDataManager.resultStream.add([]);
-          }
-        },
-        onLoadStart: (_, url) async {
-          print("onLoadStart:[$url]");
-        },
-        onLoadStop: (controller, url) async {
-          print("onLoadStop:[$url]");
-          DialogUtil.hideLoading();
-          ruleHtml.value = htmlData;
-          ruleTitle.value = await controller.getTitle() ?? "Unknown title";
-          DialogUtil.showToast("添加完毕");
-        },
-        onReceivedError: (_, __, ___) async {
-          DialogUtil.showLoading();
-          DialogUtil.showToast("出错了");
-        });
-    await headlessWebView?.run();
+            if (result != null) {
+              print("chooseRule --> [${result.files.single.path!}]");
+              String htmlData = await File(result.files.single.path!).readAsString();
+              await _addRuleHtmlData(htmlData);
+            } else {
+              DialogUtil.showToast("取消了选择");
+            }
+          },
+          child: Container(
+            width: double.infinity,
+            height: 50,
+            child: Center(child: Text("本地文件")),
+          ),
+        ),
+        GestureDetector(
+          onTap: () async {
+            Get.back();
+            String htmlData = await rootBundle.loadString('assets/rules/rss.html');
+            await _addRuleHtmlData(htmlData);
+          },
+          child: Container(
+            width: double.infinity,
+            height: 50,
+            child: Center(child: Text("默认 RSS 规则")),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Get.back();
+            DialogUtil.showToast("施工中");
+          },
+          child: Container(
+            width: double.infinity,
+            height: 50,
+            child: Center(child: Text("网络 url")),
+          ),
+        ),
+        SizedBox(
+          height: 50,
+        )
+      ],
+    ));
   }
+
+  Future<void> _addRuleHtmlData(String htmlData) async {
+    DialogUtil.showLoading();
+    // 创建无头浏览器
+    await headlessWebView
+    ?.dispose();
+    headlessWebView = HeadlessInAppWebView(
+    initialData: InAppWebViewInitialData(data: htmlData, baseUrl: WebUri(CommonUtils.getHostLink(urlEditController.text))),
+    initialSettings: InAppWebViewSettings(
+    isInspectable: kDebugMode,
+    allowUniversalAccessFromFileURLs: true,
+    allowFileAccessFromFileURLs: true,
+    ),
+    onWebViewCreated: (controller) {
+    /// 监听 js 返回
+    /// 成功
+    controller.addJavaScriptHandler(
+    handlerName: 'reader-success',
+    callback: (result) {
+    // print("getReaderData:--->\n$result");
+    if (result.isNotEmpty) {
+    ReaderDataManager.resultStream.add(result[0]);
+    } else {
+    ReaderDataManager.resultStream.add([]);
+    }
+    });
+
+    /// 失败
+    controller.addJavaScriptHandler(
+    handlerName: 'reader-fail',
+    callback: (_) {
+    ReaderDataManager.resultStream.add([]);
+    });
+    },
+    onConsoleMessage: (_, consoleMessage) {
+    print("onConsoleMessage:[$consoleMessage]");
+    if (consoleMessage.messageLevel == ConsoleMessageLevel.ERROR) {
+    ReaderDataManager.resultStream.add([]);
+    }
+    },
+    onLoadStart: (_, url) async {
+    print("onLoadStart:[$url]");
+    },
+    onLoadStop: (controller, url) async {
+    print("onLoadStop:[$url]");
+    DialogUtil.hideLoading();
+    ruleHtml.value = htmlData;
+    ruleTitle.value = await controller.getTitle() ?? "Unknown title";
+    DialogUtil.showToast("添加完毕");
+    },
+    onReceivedError: (_, __, ___) async {
+    DialogUtil.showLoading();
+    DialogUtil.showToast("出错了");
+    });
+    await headlessWebView?.run();
+    }
 
   /// 获取数据，校验完成后并添加
   void saveSource() async {

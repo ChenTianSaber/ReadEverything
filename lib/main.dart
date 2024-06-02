@@ -16,7 +16,8 @@ Future<void> main() async {
   }
 
   await DBServer().load();
-  ReaderDataManager.init();
+  // TODO 这里先不自动更新，用户手动触发
+  // ReaderDataManager.init();
 
   runApp(
     GetMaterialApp(
