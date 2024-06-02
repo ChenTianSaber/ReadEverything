@@ -13,9 +13,9 @@ import 'package:work/app/data/beans/reader_data_entity.dart';
 import 'package:work/app/data/collections/source.dart';
 import 'package:work/app/data/db/db_server.dart';
 import 'package:work/app/plugin/reader_data_manager.dart';
-import 'package:work/utils/common_utils.dart';
-import 'package:work/utils/dialog_util.dart';
-import 'package:work/utils/stream_util.dart';
+import 'package:work/app/utils/common_utils.dart';
+import 'package:work/app/utils/dialog_util.dart';
+import 'package:work/app/utils/stream_util.dart';
 
 class SourcesController extends GetxController {
   /// 无头浏览器

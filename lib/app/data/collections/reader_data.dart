@@ -1,6 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:work/app/data/collections/source.dart';
 import 'package:work/app/data/db/db_server.dart';
+import 'package:work/app/modules/home/home.view.dart';
 
 part 'reader_data.g.dart';
 
@@ -30,6 +31,10 @@ class ReaderData {
 
   /// 视频列表
   List<String>? videos;
+
+  /// 阅读状态，库/已读/收藏
+  @Enumerated(EnumType.value, 'value')
+  ListType? listType;
 
   /// 关联源
   final source = IsarLink<Source>();
