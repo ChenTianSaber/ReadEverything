@@ -22,23 +22,44 @@ const SourceSchema = CollectionSchema(
       name: r'icon',
       type: IsarType.string,
     ),
-    r'name': PropertySchema(
+    r'lastUpdateTime': PropertySchema(
       id: 1,
+      name: r'lastUpdateTime',
+      type: IsarType.long,
+    ),
+    r'name': PropertySchema(
+      id: 2,
       name: r'name',
       type: IsarType.string,
     ),
     r'ruleCode': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'ruleCode',
       type: IsarType.string,
     ),
     r'ruleName': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'ruleName',
       type: IsarType.string,
     ),
+    r'ruleUrl': PropertySchema(
+      id: 5,
+      name: r'ruleUrl',
+      type: IsarType.string,
+    ),
+    r'updateErrorTip': PropertySchema(
+      id: 6,
+      name: r'updateErrorTip',
+      type: IsarType.string,
+    ),
+    r'updateResultType': PropertySchema(
+      id: 7,
+      name: r'updateResultType',
+      type: IsarType.long,
+      enumMap: _SourceupdateResultTypeEnumValueMap,
+    ),
     r'url': PropertySchema(
-      id: 4,
+      id: 8,
       name: r'url',
       type: IsarType.string,
     )
@@ -102,6 +123,18 @@ int _sourceEstimateSize(
     }
   }
   {
+    final value = object.ruleUrl;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.updateErrorTip;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.url;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -117,10 +150,14 @@ void _sourceSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.icon);
-  writer.writeString(offsets[1], object.name);
-  writer.writeString(offsets[2], object.ruleCode);
-  writer.writeString(offsets[3], object.ruleName);
-  writer.writeString(offsets[4], object.url);
+  writer.writeLong(offsets[1], object.lastUpdateTime);
+  writer.writeString(offsets[2], object.name);
+  writer.writeString(offsets[3], object.ruleCode);
+  writer.writeString(offsets[4], object.ruleName);
+  writer.writeString(offsets[5], object.ruleUrl);
+  writer.writeString(offsets[6], object.updateErrorTip);
+  writer.writeLong(offsets[7], object.updateResultType?.value);
+  writer.writeString(offsets[8], object.url);
 }
 
 Source _sourceDeserialize(
@@ -131,10 +168,15 @@ Source _sourceDeserialize(
 ) {
   final object = Source();
   object.icon = reader.readStringOrNull(offsets[0]);
-  object.name = reader.readStringOrNull(offsets[1]);
-  object.ruleCode = reader.readStringOrNull(offsets[2]);
-  object.ruleName = reader.readStringOrNull(offsets[3]);
-  object.url = reader.readStringOrNull(offsets[4]);
+  object.lastUpdateTime = reader.readLongOrNull(offsets[1]);
+  object.name = reader.readStringOrNull(offsets[2]);
+  object.ruleCode = reader.readStringOrNull(offsets[3]);
+  object.ruleName = reader.readStringOrNull(offsets[4]);
+  object.ruleUrl = reader.readStringOrNull(offsets[5]);
+  object.updateErrorTip = reader.readStringOrNull(offsets[6]);
+  object.updateResultType =
+      _SourceupdateResultTypeValueEnumMap[reader.readLongOrNull(offsets[7])];
+  object.url = reader.readStringOrNull(offsets[8]);
   return object;
 }
 
@@ -148,17 +190,37 @@ P _sourceDeserializeProp<P>(
     case 0:
       return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
       return (reader.readStringOrNull(offset)) as P;
     case 4:
       return (reader.readStringOrNull(offset)) as P;
+    case 5:
+      return (reader.readStringOrNull(offset)) as P;
+    case 6:
+      return (reader.readStringOrNull(offset)) as P;
+    case 7:
+      return (_SourceupdateResultTypeValueEnumMap[
+          reader.readLongOrNull(offset)]) as P;
+    case 8:
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
+
+const _SourceupdateResultTypeEnumValueMap = {
+  'refreshing': 0,
+  'success': 1,
+  'fail': 2,
+};
+const _SourceupdateResultTypeValueEnumMap = {
+  0: LastUpdateType.refreshing,
+  1: LastUpdateType.success,
+  2: LastUpdateType.fail,
+};
 
 Id _sourceGetId(Source object) {
   return object.id;
@@ -552,6 +614,76 @@ extension SourceQueryFilter on QueryBuilder<Source, Source, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> lastUpdateTimeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'lastUpdateTime',
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition>
+      lastUpdateTimeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'lastUpdateTime',
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> lastUpdateTimeEqualTo(
+      int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastUpdateTime',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> lastUpdateTimeGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'lastUpdateTime',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> lastUpdateTimeLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'lastUpdateTime',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> lastUpdateTimeBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'lastUpdateTime',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -997,6 +1129,371 @@ extension SourceQueryFilter on QueryBuilder<Source, Source, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Source, Source, QAfterFilterCondition> ruleUrlIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'ruleUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> ruleUrlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'ruleUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> ruleUrlEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ruleUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> ruleUrlGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'ruleUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> ruleUrlLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'ruleUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> ruleUrlBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'ruleUrl',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> ruleUrlStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'ruleUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> ruleUrlEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'ruleUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> ruleUrlContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'ruleUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> ruleUrlMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'ruleUrl',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> ruleUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ruleUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> ruleUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'ruleUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> updateErrorTipIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'updateErrorTip',
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition>
+      updateErrorTipIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'updateErrorTip',
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> updateErrorTipEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'updateErrorTip',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> updateErrorTipGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'updateErrorTip',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> updateErrorTipLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'updateErrorTip',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> updateErrorTipBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'updateErrorTip',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> updateErrorTipStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'updateErrorTip',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> updateErrorTipEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'updateErrorTip',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> updateErrorTipContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'updateErrorTip',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> updateErrorTipMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'updateErrorTip',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> updateErrorTipIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'updateErrorTip',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition>
+      updateErrorTipIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'updateErrorTip',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> updateResultTypeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'updateResultType',
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition>
+      updateResultTypeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'updateResultType',
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> updateResultTypeEqualTo(
+      LastUpdateType? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'updateResultType',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition>
+      updateResultTypeGreaterThan(
+    LastUpdateType? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'updateResultType',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> updateResultTypeLessThan(
+    LastUpdateType? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'updateResultType',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> updateResultTypeBetween(
+    LastUpdateType? lower,
+    LastUpdateType? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'updateResultType',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Source, Source, QAfterFilterCondition> urlIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1159,6 +1656,18 @@ extension SourceQuerySortBy on QueryBuilder<Source, Source, QSortBy> {
     });
   }
 
+  QueryBuilder<Source, Source, QAfterSortBy> sortByLastUpdateTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastUpdateTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterSortBy> sortByLastUpdateTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastUpdateTime', Sort.desc);
+    });
+  }
+
   QueryBuilder<Source, Source, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1192,6 +1701,42 @@ extension SourceQuerySortBy on QueryBuilder<Source, Source, QSortBy> {
   QueryBuilder<Source, Source, QAfterSortBy> sortByRuleNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'ruleName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterSortBy> sortByRuleUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ruleUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterSortBy> sortByRuleUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ruleUrl', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterSortBy> sortByUpdateErrorTip() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updateErrorTip', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterSortBy> sortByUpdateErrorTipDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updateErrorTip', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterSortBy> sortByUpdateResultType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updateResultType', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterSortBy> sortByUpdateResultTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updateResultType', Sort.desc);
     });
   }
 
@@ -1233,6 +1778,18 @@ extension SourceQuerySortThenBy on QueryBuilder<Source, Source, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Source, Source, QAfterSortBy> thenByLastUpdateTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastUpdateTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterSortBy> thenByLastUpdateTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastUpdateTime', Sort.desc);
+    });
+  }
+
   QueryBuilder<Source, Source, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1269,6 +1826,42 @@ extension SourceQuerySortThenBy on QueryBuilder<Source, Source, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Source, Source, QAfterSortBy> thenByRuleUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ruleUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterSortBy> thenByRuleUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ruleUrl', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterSortBy> thenByUpdateErrorTip() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updateErrorTip', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterSortBy> thenByUpdateErrorTipDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updateErrorTip', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterSortBy> thenByUpdateResultType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updateResultType', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterSortBy> thenByUpdateResultTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updateResultType', Sort.desc);
+    });
+  }
+
   QueryBuilder<Source, Source, QAfterSortBy> thenByUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'url', Sort.asc);
@@ -1287,6 +1880,12 @@ extension SourceQueryWhereDistinct on QueryBuilder<Source, Source, QDistinct> {
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'icon', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Source, Source, QDistinct> distinctByLastUpdateTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'lastUpdateTime');
     });
   }
 
@@ -1311,6 +1910,27 @@ extension SourceQueryWhereDistinct on QueryBuilder<Source, Source, QDistinct> {
     });
   }
 
+  QueryBuilder<Source, Source, QDistinct> distinctByRuleUrl(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'ruleUrl', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Source, Source, QDistinct> distinctByUpdateErrorTip(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'updateErrorTip',
+          caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Source, Source, QDistinct> distinctByUpdateResultType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'updateResultType');
+    });
+  }
+
   QueryBuilder<Source, Source, QDistinct> distinctByUrl(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1332,6 +1952,12 @@ extension SourceQueryProperty on QueryBuilder<Source, Source, QQueryProperty> {
     });
   }
 
+  QueryBuilder<Source, int?, QQueryOperations> lastUpdateTimeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'lastUpdateTime');
+    });
+  }
+
   QueryBuilder<Source, String?, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
@@ -1347,6 +1973,25 @@ extension SourceQueryProperty on QueryBuilder<Source, Source, QQueryProperty> {
   QueryBuilder<Source, String?, QQueryOperations> ruleNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'ruleName');
+    });
+  }
+
+  QueryBuilder<Source, String?, QQueryOperations> ruleUrlProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'ruleUrl');
+    });
+  }
+
+  QueryBuilder<Source, String?, QQueryOperations> updateErrorTipProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'updateErrorTip');
+    });
+  }
+
+  QueryBuilder<Source, LastUpdateType?, QQueryOperations>
+      updateResultTypeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'updateResultType');
     });
   }
 

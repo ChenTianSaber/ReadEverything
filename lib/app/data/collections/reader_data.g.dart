@@ -32,23 +32,29 @@ const ReaderDataSchema = CollectionSchema(
       name: r'images',
       type: IsarType.stringList,
     ),
-    r'markdown': PropertySchema(
+    r'listType': PropertySchema(
       id: 3,
+      name: r'listType',
+      type: IsarType.long,
+      enumMap: _ReaderDatalistTypeEnumValueMap,
+    ),
+    r'markdown': PropertySchema(
+      id: 4,
       name: r'markdown',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'title',
       type: IsarType.string,
     ),
     r'url': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'url',
       type: IsarType.string,
     ),
     r'videos': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'videos',
       type: IsarType.stringList,
     )
@@ -146,10 +152,11 @@ void _readerDataSerialize(
   writer.writeString(offsets[0], object.desc);
   writer.writeString(offsets[1], object.html);
   writer.writeStringList(offsets[2], object.images);
-  writer.writeString(offsets[3], object.markdown);
-  writer.writeString(offsets[4], object.title);
-  writer.writeString(offsets[5], object.url);
-  writer.writeStringList(offsets[6], object.videos);
+  writer.writeLong(offsets[3], object.listType?.value);
+  writer.writeString(offsets[4], object.markdown);
+  writer.writeString(offsets[5], object.title);
+  writer.writeString(offsets[6], object.url);
+  writer.writeStringList(offsets[7], object.videos);
 }
 
 ReaderData _readerDataDeserialize(
@@ -162,10 +169,12 @@ ReaderData _readerDataDeserialize(
   object.desc = reader.readStringOrNull(offsets[0]);
   object.html = reader.readStringOrNull(offsets[1]);
   object.images = reader.readStringList(offsets[2]);
-  object.markdown = reader.readStringOrNull(offsets[3]);
-  object.title = reader.readStringOrNull(offsets[4]);
-  object.url = reader.readStringOrNull(offsets[5]);
-  object.videos = reader.readStringList(offsets[6]);
+  object.listType =
+      _ReaderDatalistTypeValueEnumMap[reader.readLongOrNull(offsets[3])];
+  object.markdown = reader.readStringOrNull(offsets[4]);
+  object.title = reader.readStringOrNull(offsets[5]);
+  object.url = reader.readStringOrNull(offsets[6]);
+  object.videos = reader.readStringList(offsets[7]);
   return object;
 }
 
@@ -183,17 +192,31 @@ P _readerDataDeserializeProp<P>(
     case 2:
       return (reader.readStringList(offset)) as P;
     case 3:
-      return (reader.readStringOrNull(offset)) as P;
+      return (_ReaderDatalistTypeValueEnumMap[reader.readLongOrNull(offset)])
+          as P;
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
+      return (reader.readStringOrNull(offset)) as P;
+    case 7:
       return (reader.readStringList(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
+
+const _ReaderDatalistTypeEnumValueMap = {
+  'library': 0,
+  'history': 1,
+  'collection': 2,
+};
+const _ReaderDatalistTypeValueEnumMap = {
+  0: ListType.library,
+  1: ListType.history,
+  2: ListType.collection,
+};
 
 Id _readerDataGetId(ReaderData object) {
   return object.id;
@@ -869,6 +892,77 @@ extension ReaderDataQueryFilter
         upper,
         includeUpper,
       );
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> listTypeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'listType',
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      listTypeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'listType',
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> listTypeEqualTo(
+      ListType? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'listType',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      listTypeGreaterThan(
+    ListType? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'listType',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> listTypeLessThan(
+    ListType? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'listType',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> listTypeBetween(
+    ListType? lower,
+    ListType? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'listType',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
@@ -1603,6 +1697,18 @@ extension ReaderDataQuerySortBy
     });
   }
 
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByListType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'listType', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByListTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'listType', Sort.desc);
+    });
+  }
+
   QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByMarkdown() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'markdown', Sort.asc);
@@ -1678,6 +1784,18 @@ extension ReaderDataQuerySortThenBy
     });
   }
 
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByListType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'listType', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByListTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'listType', Sort.desc);
+    });
+  }
+
   QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByMarkdown() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'markdown', Sort.asc);
@@ -1737,6 +1855,12 @@ extension ReaderDataQueryWhereDistinct
     });
   }
 
+  QueryBuilder<ReaderData, ReaderData, QDistinct> distinctByListType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'listType');
+    });
+  }
+
   QueryBuilder<ReaderData, ReaderData, QDistinct> distinctByMarkdown(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1788,6 +1912,12 @@ extension ReaderDataQueryProperty
   QueryBuilder<ReaderData, List<String>?, QQueryOperations> imagesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'images');
+    });
+  }
+
+  QueryBuilder<ReaderData, ListType?, QQueryOperations> listTypeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'listType');
     });
   }
 

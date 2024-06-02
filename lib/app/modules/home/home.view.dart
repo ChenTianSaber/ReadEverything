@@ -22,6 +22,16 @@ enum ListType {
   final int value;
 }
 
+enum LastUpdateType {
+  refreshing(0),
+  success(1),
+  fail(2);
+
+  const LastUpdateType(this.value);
+
+  final int value;
+}
+
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
 

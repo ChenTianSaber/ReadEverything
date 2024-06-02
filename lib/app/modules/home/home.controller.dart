@@ -1,17 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:work/app/data/collections/reader_data.dart';
 import 'package:work/app/data/db/db_server.dart';
 
 class HomeController extends GetxController {
-  // 数据 List
+  /// 数据 List
   RxList<ReaderData> dataList = RxList([]);
 
   final browser = ChromeSafariBrowser();
 
   Rx<int> curIndex = 1.obs;
+
+  /// TODO 上次更新时间
+  /// TODO 更新状态
 
   final PageController pageController = PageController(initialPage: 1);
 
