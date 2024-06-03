@@ -17,14 +17,8 @@ class ReaderData {
   /// 标题
   String? title;
 
-  /// 描述
-  String? desc;
-
-  /// markdown
-  String? markdown;
-
-  /// 本地html
-  String? html;
+  /// 内容（html渲染）
+  String? htmlContent;
 
   /// 图片列表
   List<String>? images;

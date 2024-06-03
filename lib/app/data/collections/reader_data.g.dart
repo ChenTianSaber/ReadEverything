@@ -22,49 +22,39 @@ const ReaderDataSchema = CollectionSchema(
       name: r'author',
       type: IsarType.string,
     ),
-    r'desc': PropertySchema(
+    r'htmlContent': PropertySchema(
       id: 1,
-      name: r'desc',
-      type: IsarType.string,
-    ),
-    r'html': PropertySchema(
-      id: 2,
-      name: r'html',
+      name: r'htmlContent',
       type: IsarType.string,
     ),
     r'images': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'images',
       type: IsarType.stringList,
     ),
     r'listType': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'listType',
       type: IsarType.long,
       enumMap: _ReaderDatalistTypeEnumValueMap,
     ),
-    r'markdown': PropertySchema(
-      id: 5,
-      name: r'markdown',
-      type: IsarType.string,
-    ),
     r'publishTime': PropertySchema(
-      id: 6,
+      id: 4,
       name: r'publishTime',
       type: IsarType.long,
     ),
     r'title': PropertySchema(
-      id: 7,
+      id: 5,
       name: r'title',
       type: IsarType.string,
     ),
     r'url': PropertySchema(
-      id: 8,
+      id: 6,
       name: r'url',
       type: IsarType.string,
     ),
     r'videos': PropertySchema(
-      id: 9,
+      id: 7,
       name: r'videos',
       type: IsarType.stringList,
     )
@@ -103,13 +93,7 @@ int _readerDataEstimateSize(
     }
   }
   {
-    final value = object.desc;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final value = object.html;
+    final value = object.htmlContent;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -124,12 +108,6 @@ int _readerDataEstimateSize(
           bytesCount += value.length * 3;
         }
       }
-    }
-  }
-  {
-    final value = object.markdown;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
     }
   }
   {
@@ -166,15 +144,13 @@ void _readerDataSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.author);
-  writer.writeString(offsets[1], object.desc);
-  writer.writeString(offsets[2], object.html);
-  writer.writeStringList(offsets[3], object.images);
-  writer.writeLong(offsets[4], object.listType?.value);
-  writer.writeString(offsets[5], object.markdown);
-  writer.writeLong(offsets[6], object.publishTime);
-  writer.writeString(offsets[7], object.title);
-  writer.writeString(offsets[8], object.url);
-  writer.writeStringList(offsets[9], object.videos);
+  writer.writeString(offsets[1], object.htmlContent);
+  writer.writeStringList(offsets[2], object.images);
+  writer.writeLong(offsets[3], object.listType?.value);
+  writer.writeLong(offsets[4], object.publishTime);
+  writer.writeString(offsets[5], object.title);
+  writer.writeString(offsets[6], object.url);
+  writer.writeStringList(offsets[7], object.videos);
 }
 
 ReaderData _readerDataDeserialize(
@@ -185,16 +161,14 @@ ReaderData _readerDataDeserialize(
 ) {
   final object = ReaderData();
   object.author = reader.readStringOrNull(offsets[0]);
-  object.desc = reader.readStringOrNull(offsets[1]);
-  object.html = reader.readStringOrNull(offsets[2]);
-  object.images = reader.readStringList(offsets[3]);
+  object.htmlContent = reader.readStringOrNull(offsets[1]);
+  object.images = reader.readStringList(offsets[2]);
   object.listType =
-      _ReaderDatalistTypeValueEnumMap[reader.readLongOrNull(offsets[4])];
-  object.markdown = reader.readStringOrNull(offsets[5]);
-  object.publishTime = reader.readLongOrNull(offsets[6]);
-  object.title = reader.readStringOrNull(offsets[7]);
-  object.url = reader.readStringOrNull(offsets[8]);
-  object.videos = reader.readStringList(offsets[9]);
+      _ReaderDatalistTypeValueEnumMap[reader.readLongOrNull(offsets[3])];
+  object.publishTime = reader.readLongOrNull(offsets[4]);
+  object.title = reader.readStringOrNull(offsets[5]);
+  object.url = reader.readStringOrNull(offsets[6]);
+  object.videos = reader.readStringList(offsets[7]);
   return object;
 }
 
@@ -210,21 +184,17 @@ P _readerDataDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset)) as P;
-    case 3:
       return (reader.readStringList(offset)) as P;
-    case 4:
+    case 3:
       return (_ReaderDatalistTypeValueEnumMap[reader.readLongOrNull(offset)])
           as P;
+    case 4:
+      return (reader.readLongOrNull(offset)) as P;
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 7:
-      return (reader.readStringOrNull(offset)) as P;
-    case 8:
-      return (reader.readStringOrNull(offset)) as P;
-    case 9:
       return (reader.readStringList(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -481,36 +451,40 @@ extension ReaderDataQueryFilter
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> descIsNull() {
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      htmlContentIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'desc',
+        property: r'htmlContent',
       ));
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> descIsNotNull() {
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      htmlContentIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'desc',
+        property: r'htmlContent',
       ));
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> descEqualTo(
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      htmlContentEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'desc',
+        property: r'htmlContent',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> descGreaterThan(
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      htmlContentGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -518,14 +492,15 @@ extension ReaderDataQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'desc',
+        property: r'htmlContent',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> descLessThan(
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      htmlContentLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -533,14 +508,15 @@ extension ReaderDataQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'desc',
+        property: r'htmlContent',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> descBetween(
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      htmlContentBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -549,7 +525,7 @@ extension ReaderDataQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'desc',
+        property: r'htmlContent',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -559,215 +535,71 @@ extension ReaderDataQueryFilter
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> descStartsWith(
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      htmlContentStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'desc',
+        property: r'htmlContent',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> descEndsWith(
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      htmlContentEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'desc',
+        property: r'htmlContent',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> descContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      htmlContentContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'desc',
+        property: r'htmlContent',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> descMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      htmlContentMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'desc',
+        property: r'htmlContent',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> descIsEmpty() {
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      htmlContentIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'desc',
+        property: r'htmlContent',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> descIsNotEmpty() {
+  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
+      htmlContentIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'desc',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> htmlIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'html',
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> htmlIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'html',
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> htmlEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'html',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> htmlGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'html',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> htmlLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'html',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> htmlBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'html',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> htmlStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'html',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> htmlEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'html',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> htmlContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'html',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> htmlMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'html',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> htmlIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'html',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> htmlIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'html',
+        property: r'htmlContent',
         value: '',
       ));
     });
@@ -1134,157 +966,6 @@ extension ReaderDataQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> markdownIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'markdown',
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
-      markdownIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'markdown',
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> markdownEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'markdown',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
-      markdownGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'markdown',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> markdownLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'markdown',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> markdownBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'markdown',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
-      markdownStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'markdown',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> markdownEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'markdown',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> markdownContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'markdown',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition> markdownMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'markdown',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
-      markdownIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'markdown',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterFilterCondition>
-      markdownIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'markdown',
-        value: '',
       ));
     });
   }
@@ -1931,27 +1612,15 @@ extension ReaderDataQuerySortBy
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByDesc() {
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByHtmlContent() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'desc', Sort.asc);
+      return query.addSortBy(r'htmlContent', Sort.asc);
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByDescDesc() {
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByHtmlContentDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'desc', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByHtml() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'html', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByHtmlDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'html', Sort.desc);
+      return query.addSortBy(r'htmlContent', Sort.desc);
     });
   }
 
@@ -1964,18 +1633,6 @@ extension ReaderDataQuerySortBy
   QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByListTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'listType', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByMarkdown() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'markdown', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> sortByMarkdownDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'markdown', Sort.desc);
     });
   }
 
@@ -2030,27 +1687,15 @@ extension ReaderDataQuerySortThenBy
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByDesc() {
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByHtmlContent() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'desc', Sort.asc);
+      return query.addSortBy(r'htmlContent', Sort.asc);
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByDescDesc() {
+  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByHtmlContentDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'desc', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByHtml() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'html', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByHtmlDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'html', Sort.desc);
+      return query.addSortBy(r'htmlContent', Sort.desc);
     });
   }
 
@@ -2075,18 +1720,6 @@ extension ReaderDataQuerySortThenBy
   QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByListTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'listType', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByMarkdown() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'markdown', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QAfterSortBy> thenByMarkdownDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'markdown', Sort.desc);
     });
   }
 
@@ -2136,17 +1769,10 @@ extension ReaderDataQueryWhereDistinct
     });
   }
 
-  QueryBuilder<ReaderData, ReaderData, QDistinct> distinctByDesc(
+  QueryBuilder<ReaderData, ReaderData, QDistinct> distinctByHtmlContent(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'desc', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QDistinct> distinctByHtml(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'html', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'htmlContent', caseSensitive: caseSensitive);
     });
   }
 
@@ -2159,13 +1785,6 @@ extension ReaderDataQueryWhereDistinct
   QueryBuilder<ReaderData, ReaderData, QDistinct> distinctByListType() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'listType');
-    });
-  }
-
-  QueryBuilder<ReaderData, ReaderData, QDistinct> distinctByMarkdown(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'markdown', caseSensitive: caseSensitive);
     });
   }
 
@@ -2210,15 +1829,9 @@ extension ReaderDataQueryProperty
     });
   }
 
-  QueryBuilder<ReaderData, String?, QQueryOperations> descProperty() {
+  QueryBuilder<ReaderData, String?, QQueryOperations> htmlContentProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'desc');
-    });
-  }
-
-  QueryBuilder<ReaderData, String?, QQueryOperations> htmlProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'html');
+      return query.addPropertyName(r'htmlContent');
     });
   }
 
@@ -2231,12 +1844,6 @@ extension ReaderDataQueryProperty
   QueryBuilder<ReaderData, ListType?, QQueryOperations> listTypeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'listType');
-    });
-  }
-
-  QueryBuilder<ReaderData, String?, QQueryOperations> markdownProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'markdown');
     });
   }
 

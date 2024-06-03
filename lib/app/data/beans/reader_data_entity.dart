@@ -9,11 +9,11 @@ import 'package:work/generated/json/reader_data_entity.g.dart';
 class ReaderDataEntity {
   String? url;
   String? title;
-  String? desc;
-  String? markdown;
-  String? html;
+  String? htmlContent;
   List<String>? images;
   List<String>? videos;
+  int? publishTime;
+  String? author;
 
   ReaderDataEntity();
 
@@ -32,9 +32,9 @@ extension ReaderDataEntityEX on ReaderDataEntity {
     return ReaderData()
       ..url = url
       ..title = title
-      ..desc = desc
-      ..markdown = markdown
-      ..html = html
+      ..htmlContent = htmlContent
+      ..author = author
+      ..publishTime = publishTime
       ..images = images
       ..videos = videos
       ..source.value = source;

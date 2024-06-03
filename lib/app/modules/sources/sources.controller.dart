@@ -10,6 +10,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:work/app/data/beans/reader_data_entity.dart';
+import 'package:work/app/data/collections/reader_data.dart';
 import 'package:work/app/data/collections/source.dart';
 import 'package:work/app/data/db/db_server.dart';
 import 'package:work/app/plugin/reader_data_manager.dart';
@@ -110,58 +111,57 @@ class SourcesController extends GetxController {
   Future<void> _addRuleHtmlData(String htmlData) async {
     DialogUtil.showLoading();
     // 创建无头浏览器
-    await headlessWebView
-    ?.dispose();
+    await headlessWebView?.dispose();
     headlessWebView = HeadlessInAppWebView(
-    initialData: InAppWebViewInitialData(data: htmlData, baseUrl: WebUri(CommonUtils.getHostLink(urlEditController.text))),
-    initialSettings: InAppWebViewSettings(
-    isInspectable: kDebugMode,
-    allowUniversalAccessFromFileURLs: true,
-    allowFileAccessFromFileURLs: true,
-    ),
-    onWebViewCreated: (controller) {
-    /// 监听 js 返回
-    /// 成功
-    controller.addJavaScriptHandler(
-    handlerName: 'reader-success',
-    callback: (result) {
-    // print("getReaderData:--->\n$result");
-    if (result.isNotEmpty) {
-    ReaderDataManager.resultStream.add(result[0]);
-    } else {
-    ReaderDataManager.resultStream.add([]);
-    }
-    });
+        initialData: InAppWebViewInitialData(data: htmlData, baseUrl: WebUri(CommonUtils.getHostLink(urlEditController.text))),
+        initialSettings: InAppWebViewSettings(
+          isInspectable: kDebugMode,
+          allowUniversalAccessFromFileURLs: true,
+          allowFileAccessFromFileURLs: true,
+        ),
+        onWebViewCreated: (controller) {
+          /// 监听 js 返回
+          /// 成功
+          controller.addJavaScriptHandler(
+              handlerName: 'reader-success',
+              callback: (result) {
+                // print("getReaderData:--->\n$result");
+                if (result.isNotEmpty) {
+                  ReaderDataManager.resultStream.add(result[0]);
+                } else {
+                  ReaderDataManager.resultStream.add([]);
+                }
+              });
 
-    /// 失败
-    controller.addJavaScriptHandler(
-    handlerName: 'reader-fail',
-    callback: (_) {
-    ReaderDataManager.resultStream.add([]);
-    });
-    },
-    onConsoleMessage: (_, consoleMessage) {
-    print("onConsoleMessage:[$consoleMessage]");
-    if (consoleMessage.messageLevel == ConsoleMessageLevel.ERROR) {
-    ReaderDataManager.resultStream.add([]);
-    }
-    },
-    onLoadStart: (_, url) async {
-    print("onLoadStart:[$url]");
-    },
-    onLoadStop: (controller, url) async {
-    print("onLoadStop:[$url]");
-    DialogUtil.hideLoading();
-    ruleHtml.value = htmlData;
-    ruleTitle.value = await controller.getTitle() ?? "Unknown title";
-    DialogUtil.showToast("添加完毕");
-    },
-    onReceivedError: (_, __, ___) async {
-    DialogUtil.showLoading();
-    DialogUtil.showToast("出错了");
-    });
+          /// 失败
+          controller.addJavaScriptHandler(
+              handlerName: 'reader-fail',
+              callback: (_) {
+                ReaderDataManager.resultStream.add([]);
+              });
+        },
+        onConsoleMessage: (_, consoleMessage) {
+          print("onConsoleMessage:[$consoleMessage]");
+          if (consoleMessage.messageLevel == ConsoleMessageLevel.ERROR) {
+            ReaderDataManager.resultStream.add([]);
+          }
+        },
+        onLoadStart: (_, url) async {
+          print("onLoadStart:[$url]");
+        },
+        onLoadStop: (controller, url) async {
+          print("onLoadStop:[$url]");
+          DialogUtil.hideLoading();
+          ruleHtml.value = htmlData;
+          ruleTitle.value = await controller.getTitle() ?? "Unknown title";
+          DialogUtil.showToast("添加完毕");
+        },
+        onReceivedError: (_, __, ___) async {
+          DialogUtil.showLoading();
+          DialogUtil.showToast("出错了");
+        });
     await headlessWebView?.run();
-    }
+  }
 
   /// 获取数据，校验完成后并添加
   void saveSource() async {
@@ -180,6 +180,7 @@ class SourcesController extends GetxController {
         List<dynamic> response = await futureResponse.timeout(const Duration(seconds: 5 * 60), onTimeout: () => []);
         print("=============START===============");
         List<ReaderDataEntity> entities = [];
+        List<ReaderData> readDataList = [];
         for (var data in response) {
           var entity = ReaderDataEntity.fromJson(data);
           print("entity --> [$entity]");
@@ -197,8 +198,13 @@ class SourcesController extends GetxController {
             ..url = sourceUrl
             ..ruleCode = ruleHtml.value
             ..ruleName = ruleTitle.value;
-          await DBServerSource.inserts([source]);
-          // TODO 将获取到的数据也存入
+          var dbRes1 = await DBServerSource.inserts([source]);
+          // 将获取到的数据也存入
+          for (var entity in entities) {
+            readDataList.add(entity.toReaderData(source));
+          }
+          var dbRes2 = await DBServerReaderData.inserts(readDataList);
+          print("DBServerSource:[$dbRes1]/[$source] DBServerReaderData:[$dbRes2]/[${readDataList.length}]");
           DialogUtil.showToast("已存入");
         }
       } finally {

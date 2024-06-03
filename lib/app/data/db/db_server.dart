@@ -179,7 +179,17 @@ class DBServerReaderData {
 
   /// 插入
   static Future<bool> inserts(List<ReaderData> values) async {
-    return await DBServer().inserts<ReaderData>(values..removeWhere((element) => element.url == null));
+    try {
+      await DBServer().isar.writeTxn(() async {
+        await DBServer().isar.readerDatas.putAll(values);
+        for (ReaderData data in values) {
+          await data.source.save();
+        }
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   /// 改
