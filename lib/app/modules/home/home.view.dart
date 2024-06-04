@@ -1,3 +1,4 @@
+import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,6 +7,10 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 
 import 'package:get/get.dart';
+import 'package:get/get_navigation/src/routes/get_transition_mixin.dart';
+import 'package:path/path.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import 'package:work/app/components/keep_alive.dart';
 import 'package:work/app/data/collections/reader_data.dart';
 import 'package:work/app/data/collections/source.dart';
@@ -275,9 +280,19 @@ class HomeView extends GetView<HomeController> {
                   // TODO 视频 + 图片
                   _buildImageVideoList(data),
                   // TODO url,来源
-                  Text(
+                  // TODO 导出富文本展示
+                  EasyRichText(
                     "来源: ${data.url}",
-                    style: TextStyle(fontSize: 12, color: Colors.black87),
+                    patternList: [
+                      EasyRichTextPattern(
+                        targetString: "来源: ",
+                        style: TextStyle(fontSize: 13, color: Colors.black87),
+                      ),
+                      EasyRichTextPattern(
+                        targetString: "${data.url}",
+                        style: TextStyle(fontSize: 13, color: Colors.blueAccent),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -292,41 +307,41 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
+  // TODO 导入 Image 和 Video 查看器
   Widget _buildImageVideoList(ReaderData data) {
     var width = 120.0;
+
+    // TODO 测试添加图片
+    List<Widget> images = [];
+    for (var i = 0; i < 10; i++) {
+      images.add(GestureDetector(
+        onTap: (){
+          DialogUtil.showToast("$i");
+          Get.toNamed(Routes.IMAGEVIEWER);
+        },
+        child: Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(4.0)),
+          clipBehavior: Clip.hardEdge,
+          child: Image.network('https://picsum.photos/250?image=9', width: width, height: width),
+        ),
+      ));
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Container(
         height: width,
-        child: ListView(
+        child: ListView.separated(
           scrollDirection: Axis.horizontal,
-          children: <Widget>[
-            Container(
-              width: width,
-              color: Colors.redAccent,
-              child: Center(child: Text('Item 1')),
-            ),
-            Container(
-              width: width,
-              color: Colors.blueAccent,
-              child: Center(child: Text('Item 2')),
-            ),
-            Container(
-              width: width,
-              color: Colors.greenAccent,
-              child: Center(child: Text('Item 3')),
-            ),
-            Container(
-              width: width,
-              color: Colors.yellowAccent,
-              child: Center(child: Text('Item 4')),
-            ),
-            Container(
-              width: width,
-              color: Colors.orangeAccent,
-              child: Center(child: Text('Item 5')),
-            ),
-          ],
+          itemBuilder: (context, index) {
+            return images[index];
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return VerticalDivider(
+              width: 6,
+            );
+          },
+          itemCount: images.length,
         ),
       ),
     );
@@ -346,12 +361,11 @@ class ContentHtmlWidget extends StatefulWidget {
 class _ContentHtmlWidgetState extends State<ContentHtmlWidget> {
   HomeController get controller => Get.find<HomeController>();
   final GlobalKey _columnKey = GlobalKey();
-  late bool isFold;
+  bool isFold = true;
 
   @override
   void initState() {
     super.initState();
-    isFold = true;
   }
 
   @override

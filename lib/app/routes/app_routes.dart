@@ -8,6 +8,7 @@ abstract class Routes {
   static const SOURCE_LIST = _Paths.SOURCES + _Paths.SOURCE_LIST;
   static const DETAIL = _Paths.DETAIL;
   static const HTML = _Paths.DETAIL + _Paths.HTML;
+  static const IMAGEVIEWER = _Paths.IMAGEVIEWER;
 }
 
 abstract class _Paths {
@@ -17,4 +18,5 @@ abstract class _Paths {
   static const SOURCE_LIST = '/source-list';
   static const DETAIL = '/detail';
   static const HTML = '/html';
+  static const IMAGEVIEWER = '/imageviewer';
 }

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:work/app/modules/image_viewer/image_viewer.binding.dart';
 
 import '../modules/detail/detail.binding.dart';
 import '../modules/detail/detail.view.dart';
@@ -6,6 +7,7 @@ import '../modules/detail/html/html.binding.dart';
 import '../modules/detail/html/html.view.dart';
 import '../modules/home/home.binding.dart';
 import '../modules/home/home.view.dart';
+import '../modules/image_viewer/image_viewer.view.dart';
 import '../modules/sources/source_list/source_list.binding.dart';
 import '../modules/sources/source_list/source_list.view.dart';
 import '../modules/sources/sources.binding.dart';
@@ -47,6 +49,11 @@ class AppPages {
           binding: HtmlBinding(),
         ),
       ],
+    ),
+    GetPage(
+      name: _Paths.IMAGEVIEWER,
+      page: () => const ImageViewerView(),
+      binding: ImageViewerBinding(),
     ),
   ];
 }
