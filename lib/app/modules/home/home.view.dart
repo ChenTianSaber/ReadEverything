@@ -269,27 +269,9 @@ class HomeView extends GetView<HomeController> {
                     ),
                   ),
                   // TODO 内容
-                  HtmlWidget(
-                    '''<p style="text-indent:2em;"> 今日（5月29日），多结局美少女<a target="_blank" href="https://www.3dmgame.com/tag/lianai_1/">恋爱</a>游戏《恶魔鉴定守则》Steam页面上线，游戏支持简体中文，发售日待定，感兴趣的玩家可以<a href="https://store.steampowered.com/app/2717570/Find_the_Demon/" target="_blank">点击此处</a>进入商店页面。 </p> <p style="text-indent:2em;"> </p><p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976737_853105.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p></p> <p style="text-indent:2em;"> <strong>游戏介绍：</strong> </p> <p style="text-indent:2em;"> 没有记忆的你被扔进一个古怪空间参与一场游戏。一同困在这里的三位女性将是你此行的同伴。三人都自称与你相识，且与你存在某种特殊关系。然而，若她们的自述属实，这三个人所处的世界之间显然毫无关联。你被秘密告知她们之中隐藏着一只心魔……但是，你真的有可能找出它吗? </p> <p style="text-indent:2em;"> <strong>游戏特点：</strong> </p> <p style="text-indent:2em;"> 你每天必须选择一扇“门”进入某个随机世界。你可能会在那里窥探某人的回忆、体验和某人独处的机会、遭遇意外战斗，或仅仅是经历一场古怪的探访。期间，别忘了尽可能寻找补给来缓解生存压力。 </p> <p style="text-indent:2em;"> 这里没有为你专门安排的房间，因此你每天都只能选择与一位女主角同宿。这是你调查恶魔的绝佳机会，你可以通过提出或回答问题来了解她们，进入她们的梦境，偷听她们的梦呓，寻找恶魔可能存在的破绽。 </p> <p style="text-indent:2em;"> 进入特定的世界并平安归来后，将能解锁女主角们的特殊服装。在休息时，她们可以换上特殊服装与你进行互动。 </p> <p style="text-indent:2em;"> 如果有幸存活到最后，你将获得选择【与谁共度余生】与【杀死谁】的权利，你的选择会决定每个人的命运，包括你自己。 </p> <p style="text-indent:2em;"> 在完成不同女主角的结局后，你将获得对应的特殊探险加成，帮助你更自由地探索各个未知之“门”。 </p> <p style="text-indent:2em;"> <strong>游戏截图：</strong> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976691_275612.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976691_605411.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976691_740260.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976691_641966.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976691_746146.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976692_543497.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976692_901852.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976692_512346.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976693_512769.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976693_598161.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p>''',
-                    customWidgetBuilder: (element) {
-                      // print("customWidgetBuilder:[${element}]");
-                      if (element.localName == "p" || element.localName == "a") {
-                        return null;
-                      }
-                      return const SizedBox.shrink();
-                    },
-                    customStylesBuilder: (element) {
-                      print("customWidgetBuilder:[${element}]");
-                      return {'margin': '0px'};
-                    },
-                    renderMode: RenderMode.column,
-                    onTapUrl: (url) async {
-                      await controller.browser.open(url: WebUri(url), settings: ChromeSafariBrowserSettings(shareState: CustomTabsShareState.SHARE_STATE_OFF, barCollapsingEnabled: true));
-                      return true;
-                    },
-                    textStyle: TextStyle(fontSize: 16, overflow: TextOverflow.ellipsis),
-                  ),
-
+                  ContentHtmlWidget(
+                      html:
+                          '''<p style="text-indent:2em;"> 今日（5月29日），多结局美少女<a target="_blank" href="https://www.3dmgame.com/tag/lianai_1/">恋爱</a>游戏《恶魔鉴定守则》Steam页面上线，游戏支持简体中文，发售日待定，感兴趣的玩家可以<a href="https://store.steampowered.com/app/2717570/Find_the_Demon/" target="_blank">点击此处</a>进入商店页面。 </p> <p style="text-indent:2em;"> </p><p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976737_853105.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p></p> <p style="text-indent:2em;"> <strong>游戏介绍：</strong> </p> <p style="text-indent:2em;"> 没有记忆的你被扔进一个古怪空间参与一场游戏。一同困在这里的三位女性将是你此行的同伴。三人都自称与你相识，且与你存在某种特殊关系。然而，若她们的自述属实，这三个人所处的世界之间显然毫无关联。你被秘密告知她们之中隐藏着一只心魔……但是，你真的有可能找出它吗? </p> <p style="text-indent:2em;"> <strong>游戏特点：</strong> </p> <p style="text-indent:2em;"> 你每天必须选择一扇“门”进入某个随机世界。你可能会在那里窥探某人的回忆、体验和某人独处的机会、遭遇意外战斗，或仅仅是经历一场古怪的探访。期间，别忘了尽可能寻找补给来缓解生存压力。 </p> <p style="text-indent:2em;"> 这里没有为你专门安排的房间，因此你每天都只能选择与一位女主角同宿。这是你调查恶魔的绝佳机会，你可以通过提出或回答问题来了解她们，进入她们的梦境，偷听她们的梦呓，寻找恶魔可能存在的破绽。 </p> <p style="text-indent:2em;"> 进入特定的世界并平安归来后，将能解锁女主角们的特殊服装。在休息时，她们可以换上特殊服装与你进行互动。 </p> <p style="text-indent:2em;"> 如果有幸存活到最后，你将获得选择【与谁共度余生】与【杀死谁】的权利，你的选择会决定每个人的命运，包括你自己。 </p> <p style="text-indent:2em;"> 在完成不同女主角的结局后，你将获得对应的特殊探险加成，帮助你更自由地探索各个未知之“门”。 </p> <p style="text-indent:2em;"> <strong>游戏截图：</strong> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976691_275612.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976691_605411.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976691_740260.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976691_641966.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976691_746146.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976692_543497.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976692_901852.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976692_512346.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976693_512769.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p> <p align="center"> <img src="https://img.3dmgame.com/uploads/images/news/20240529/1716976693_598161.jpg" alt="《恶魔鉴定守则》Steam页面上线 支持简体中文" referrerpolicy="no-referrer"> </p>'''),
                   // TODO 视频 + 图片
                   _buildImageVideoList(data),
                   // TODO url,来源
@@ -347,6 +329,95 @@ class HomeView extends GetView<HomeController> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// 可折叠展开的内容 Widget
+class ContentHtmlWidget extends StatefulWidget {
+  final String html;
+
+  const ContentHtmlWidget({super.key, required this.html});
+
+  @override
+  State<ContentHtmlWidget> createState() => _ContentHtmlWidgetState();
+}
+
+class _ContentHtmlWidgetState extends State<ContentHtmlWidget> {
+  HomeController get controller => Get.find<HomeController>();
+  final GlobalKey _columnKey = GlobalKey();
+  late bool isFold;
+
+  @override
+  void initState() {
+    super.initState();
+    isFold = true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          key: _columnKey,
+          height: isFold ? 240 : null,
+          child: Column(
+            children: [
+              HtmlWidget(
+                widget.html,
+                customWidgetBuilder: (element) {
+                  // print("customWidgetBuilder:[${element}]");
+                  if (element.localName == "p" || element.localName == "a") {
+                    return null;
+                  }
+                  return const SizedBox.shrink();
+                },
+                customStylesBuilder: (element) {
+                  print("customWidgetBuilder:[${element}]");
+                  return {'margin': '0px'};
+                },
+                renderMode: RenderMode.column,
+                onTapUrl: (url) async {
+                  await controller.browser.open(url: WebUri(url), settings: ChromeSafariBrowserSettings(shareState: CustomTabsShareState.SHARE_STATE_OFF, barCollapsingEnabled: true));
+                  return true;
+                },
+                textStyle: TextStyle(fontSize: 16, overflow: TextOverflow.ellipsis),
+              ),
+              SizedBox(
+                height: 48,
+              )
+            ],
+          ),
+        ),
+        Positioned(
+          bottom: 0,
+          child: Container(
+            width: Get.width,
+            decoration: isFold
+                ? BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.white.withOpacity(0.1), Colors.white.withOpacity(0.6), Colors.white.withOpacity(0.8), Colors.white],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  )
+                : null,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        isFold = !isFold;
+                      });
+                    },
+                    child: Text(isFold ? "展开" : "收起"))
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
