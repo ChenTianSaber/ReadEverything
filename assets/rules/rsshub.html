@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<head>
+    <title>RSSHub 标准解析器</title>
+    <script src="https://cdn.jsdelivr.net/npm/rss-parser@3.13.0/dist/rss-parser.min.js"></script>
+</head>
+
+<body>
+<button id="fetchButton">Fetch Data</button>
+
+<script>
+    document.getElementById('fetchButton').addEventListener('click', getReaderData);
+
+    function getReaderData(url) {
+        let parser = new RSSParser();
+        parser.parseURL(url, function (err, feed) {
+            if (err) {
+                window.flutter_inappwebview.callHandler('reader-fail');
+                throw err;
+            }
+            console.log('RSSParser:', feed);
+            // 拼装数据
+            var result = [];
+            feed.items.forEach(function (entry) {
+                // TODO 将发布时间转换为 UTC 时间戳
+                // 创建 Date 对象
+                const dateObject = new Date(entry.pubDate);
+                // 获取 UTC 时间戳（以毫秒为单位）
+                const timestamp = dateObject.getTime();
+                console.log('发布时间', entry.pubDate, timestamp)
+                // TODO 从 content 中解析出所有 img
+                // TODO 从 content 中解析所有 video
+                // 使用 DOMParser 解析 HTML 字符串
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(entry.content, 'text/html');
+
+                // 获取所有 <img> 标签
+                const imgTags = doc.querySelectorAll('img');
+                const imgUrls = [];
+                imgTags.forEach(img => {
+                    imgUrls.push(img.src);
+                });
+
+                // 获取所有 <video> 标签
+                const videoTags = doc.querySelectorAll('video');
+                const videoUrls = [];
+                videoTags.forEach(video => {
+                    videoUrls.push(video.src);
+                });
+
+                // 输出结果
+                console.log('Image URLs:', imgUrls);
+                console.log('Video URLs:', videoUrls);
+
+                result.push({
+                    url: entry.link,
+                    title: entry.title,
+                    author: entry.author,
+                    htmlContent: entry.content,
+                    images: imgUrls,
+                    videos: videoUrls,
+                    publishTime: timestamp,
+                });
+            })
+            console.log('Result:', result);
+            window.flutter_inappwebview.callHandler('reader-success', result);
+        })
+    }
+</script>
+</body>

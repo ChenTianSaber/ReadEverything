@@ -168,7 +168,7 @@ class DBServerSource {
 class DBServerReaderData {
   /// 获取全部
   static Future<List<ReaderData>> getAll() async {
-    List<ReaderData> data = (await DBServer().getAll<ReaderData>()) ?? [];
+    List<ReaderData> data = (await DBServer().isar.collection<ReaderData>().where().sortByPublishTimeDesc().findAll());
     return data;
   }
 

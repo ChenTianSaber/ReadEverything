@@ -1,12 +1,15 @@
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 
 class ImageViewerController extends GetxController {
-  //TODO: Implement ImageviewerController
+  RxList<String> images = <String>[].obs;
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
+    try {
+      images.value = Get.arguments["imageList"] as List<String>;
+    } catch (_) {}
   }
 
   @override
@@ -18,6 +21,4 @@ class ImageViewerController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

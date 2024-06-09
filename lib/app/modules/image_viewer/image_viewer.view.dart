@@ -22,11 +22,7 @@ class ImageViewerView extends GetView<ImageViewerController> {
 }
 
 class GalleryPhotoViewWrapper extends StatefulWidget {
-  GalleryPhotoViewWrapper({
-    this.backgroundDecoration,
-    this.initialIndex = 0,
-    this.scrollDirection = Axis.horizontal
-  }) : pageController = PageController(initialPage: initialIndex);
+  GalleryPhotoViewWrapper({this.backgroundDecoration, this.initialIndex = 0, this.scrollDirection = Axis.horizontal}) : pageController = PageController(initialPage: initialIndex);
 
   final BoxDecoration? backgroundDecoration;
   final int initialIndex;
@@ -40,6 +36,8 @@ class GalleryPhotoViewWrapper extends StatefulWidget {
 }
 
 class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
+  final ImageViewerController controller = Get.find<ImageViewerController>();
+
   late int currentIndex = widget.initialIndex;
 
   void onPageChanged(int index) {
@@ -62,7 +60,7 @@ class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
             PhotoViewGallery.builder(
               scrollPhysics: const BouncingScrollPhysics(),
               builder: _buildItem,
-              itemCount: 10,
+              itemCount: controller.images.length,
               backgroundDecoration: widget.backgroundDecoration,
               pageController: widget.pageController,
               onPageChanged: onPageChanged,
@@ -87,11 +85,11 @@ class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
 
   PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {
     return PhotoViewGalleryPageOptions(
-      imageProvider: NetworkImage("https://picsum.photos/250?image=9"),
+      imageProvider: NetworkImage(controller.images[index]),
       initialScale: PhotoViewComputedScale.contained,
       minScale: PhotoViewComputedScale.contained * (0.5 + index / 10),
       maxScale: PhotoViewComputedScale.covered * 4.1,
-      heroAttributes: PhotoViewHeroAttributes(tag: "https://picsum.photos/250?image=9"),
+      heroAttributes: PhotoViewHeroAttributes(tag: controller.images[index]),
     );
   }
 }

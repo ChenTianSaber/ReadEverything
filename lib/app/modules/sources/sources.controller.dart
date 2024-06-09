@@ -81,7 +81,7 @@ class SourcesController extends GetxController {
         GestureDetector(
           onTap: () async {
             Get.back();
-            String htmlData = await rootBundle.loadString('assets/rules/rss.html');
+            String htmlData = await rootBundle.loadString('assets/rules/rsshub.html');
             await _addRuleHtmlData(htmlData);
           },
           child: Container(
