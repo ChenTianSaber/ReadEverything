@@ -316,8 +316,7 @@ class HomeView extends GetView<HomeController> {
     for (var i = 0; i < (data.images?.length ?? 0); i++) {
       images.add(GestureDetector(
         onTap: () {
-          DialogUtil.showToast("$i");
-          Get.toNamed(Routes.IMAGEVIEWER, arguments: {"imageList": data.images});
+          Get.toNamed(Routes.IMAGEVIEWER, arguments: {"imageList": data.images, "index": i});
         },
         child: Container(
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(4.0)),

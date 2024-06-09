@@ -16,71 +16,42 @@ class ImageViewerView extends GetView<ImageViewerController> {
         title: const Text('ImageviewerView'),
         centerTitle: true,
       ),
-      body: GalleryPhotoViewWrapper(),
-    );
-  }
-}
-
-class GalleryPhotoViewWrapper extends StatefulWidget {
-  GalleryPhotoViewWrapper({this.backgroundDecoration, this.initialIndex = 0, this.scrollDirection = Axis.horizontal}) : pageController = PageController(initialPage: initialIndex);
-
-  final BoxDecoration? backgroundDecoration;
-  final int initialIndex;
-  final PageController pageController;
-  final Axis scrollDirection;
-
-  @override
-  State<StatefulWidget> createState() {
-    return _GalleryPhotoViewWrapperState();
-  }
-}
-
-class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
-  final ImageViewerController controller = Get.find<ImageViewerController>();
-
-  late int currentIndex = widget.initialIndex;
-
-  void onPageChanged(int index) {
-    setState(() {
-      currentIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: widget.backgroundDecoration,
-        constraints: BoxConstraints.expand(
-          height: MediaQuery.of(context).size.height,
-        ),
-        child: Stack(
-          alignment: Alignment.bottomRight,
-          children: <Widget>[
-            PhotoViewGallery.builder(
-              scrollPhysics: const BouncingScrollPhysics(),
-              builder: _buildItem,
-              itemCount: controller.images.length,
-              backgroundDecoration: widget.backgroundDecoration,
-              pageController: widget.pageController,
-              onPageChanged: onPageChanged,
-              scrollDirection: widget.scrollDirection,
-            ),
-            Container(
-              padding: const EdgeInsets.all(20.0),
-              child: Text(
-                "Image ${currentIndex + 1}",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 17.0,
-                  decoration: null,
-                ),
+      body: Obx(
+        () => Container(
+          constraints: BoxConstraints.expand(
+            height: MediaQuery.of(context).size.height,
+          ),
+          child: Stack(
+            alignment: Alignment.bottomRight,
+            children: <Widget>[
+              PhotoViewGallery.builder(
+                scrollPhysics: const BouncingScrollPhysics(),
+                builder: _buildItem,
+                itemCount: controller.images.length,
+                pageController: controller.pageController,
+                onPageChanged: onPageChanged,
+                scrollDirection: Axis.horizontal,
               ),
-            )
-          ],
+              Container(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  "Image ${controller.currentIndex.value + 1}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 17.0,
+                    decoration: null,
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void onPageChanged(int index) {
+    controller.currentIndex.value = index;
   }
 
   PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {
