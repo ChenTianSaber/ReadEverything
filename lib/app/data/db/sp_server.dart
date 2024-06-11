@@ -23,4 +23,15 @@ class SPServer {
     return await StorageUtils.setItem(_lastTabIndex, index);
   }
 
+  /// Library 列表的滚动位置
+  static String get _lastLibraryIndex => "last_library_index";
+
+  static int getLastLibraryIndex() {
+    return StorageUtils.getItem(_lastLibraryIndex) ?? 0;
+  }
+
+  static Future<bool> setLastLibraryIndex(int index) async {
+    return await StorageUtils.setItem(_lastLibraryIndex, index);
+  }
+
 }

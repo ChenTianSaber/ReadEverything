@@ -13,7 +13,6 @@ import 'package:work/app/modules/home/home.view.dart';
 import 'package:work/app/plugin/reader_data_manager.dart';
 
 class HomeController extends GetxController {
-
   /// 数据 List
   RxList<ReaderData> libraryDataList = RxList([]);
   RxList<ReaderData> historyDataList = RxList([]);
@@ -22,6 +21,7 @@ class HomeController extends GetxController {
   final browser = ChromeSafariBrowser();
 
   final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
+  final ItemScrollController itemScrollController = ItemScrollController();
 
   Rx<int> curIndex = 1.obs;
 
@@ -48,6 +48,10 @@ class HomeController extends GetxController {
       bottomUnReadStr.value = "\n下面还有 $unreadSum 个没看";
     } else {
       bottomUnReadStr.value = "\n已全部看完!";
+    }
+    if (SPServer.getLastLibraryIndex() != positions.last.index) {
+      print("存入 ${positions.last.index}");
+      SPServer.setLastLibraryIndex(positions.last.index);
     }
   }
 
@@ -99,10 +103,12 @@ class HomeController extends GetxController {
 
   Future<void> refreshList() async {
     // 先把当前的数据移入 History 中
-    for(ReaderData data in libraryDataList){
-      await DBServerReaderData.update(url: data.url??"", updateBuilder: (item){
-        item.listType = ListType.history;
-      });
+    for (ReaderData data in libraryDataList) {
+      await DBServerReaderData.update(
+          url: data.url ?? "",
+          updateBuilder: (item) {
+            item.listType = ListType.history;
+          });
     }
     await ReaderDataManager.refreshReaderData();
   }
@@ -110,6 +116,10 @@ class HomeController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    print("跳转:[${SPServer.getLastLibraryIndex()}]");
+    Future.delayed(Duration(milliseconds: 500), () {
+      itemScrollController.jumpTo(index: SPServer.getLastLibraryIndex());
+    });
   }
 
   @override

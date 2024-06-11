@@ -221,7 +221,8 @@ class HomeView extends GetView<HomeController> {
   Widget _buildList(ListType type, RxList<ReaderData> list) {
     return Obx(() => ScrollablePositionedList.builder(
           itemCount: list.length,
-          itemPositionsListener: controller.itemPositionsListener,
+          itemScrollController: type == ListType.library ? controller.itemScrollController : null,
+          itemPositionsListener: type == ListType.library ? controller.itemPositionsListener : null,
           itemBuilder: (BuildContext context, int index) {
             ReaderData data = list[index];
             return _buildListItem(data);
