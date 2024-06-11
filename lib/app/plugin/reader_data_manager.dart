@@ -29,6 +29,7 @@ class ReaderDataManager {
   static final StreamController<bool> _createStream = StreamController.broadcast();
 
   /// 定时拉取所有源的数据
+  /// 暂时不定时
   static init() async {
     if (_isInit) {
       // 队列已经初始化
@@ -38,55 +39,61 @@ class ReaderDataManager {
     _isInit = true;
 
     while (_isInit) {
-      // 拉取所有数据
-      var sources = await DBServerSource.getAll();
-      for (Source source in sources) {
-        if (source.ruleCode?.isNotEmpty == true) {
-          var result = await _createHeadlessWebView(source.ruleCode!, source.url ?? "");
-
-          if (!result) {
-            print("_createHeadlessWebView 加载失败");
-            continue;
-          }
-
-          if (_headlessWebView?.isRunning() == true) {
-            print("开始请求数据:[${source.url}]");
-
-            if (_headlessWebView?.isRunning() ?? false) {
-              try {
-                var responseStream = ReaderDataManager.resultStream.stream;
-                Future<List<dynamic>> futureResponse = responseStream.first;
-                await _headlessWebView?.webViewController?.evaluateJavascript(source: "getReaderData('${source.url}')");
-
-                // 等待getReaderData返回
-                List<dynamic> response = await futureResponse.timeout(const Duration(seconds: 5 * 60), onTimeout: () => []);
-                print("=============START===============");
-                List<ReaderData> dataList = [];
-                for (var data in response) {
-                  var entity = ReaderDataEntity.fromJson(data);
-                  print("entity --> [$entity]");
-                  if (entity.url?.isNotEmpty == true) {
-                    dataList.add(entity.toReaderData(source));
-                  }
-                }
-                print("=============END===============");
-                // 校验内部格式是否正确，必填字段是否存在
-                if (dataList.isNotEmpty) {
-                  var result = await DBServerReaderData.inserts(dataList);
-                  print("保存完毕:[${dataList.length}] [$result]");
-                }
-              } catch (e) {
-                print("规则运行失败，请重试1");
-              }
-            } else {
-              print("规则运行失败，请重试2");
-            }
-          }
-        }
-      }
+      await refreshReaderData();
 
       // 每 30分钟 执行一次
       await Future.delayed(const Duration(minutes: 30));
+    }
+  }
+
+  static refreshReaderData() async {
+    // 拉取所有数据
+    var sources = await DBServerSource.getAll();
+    for (Source source in sources) {
+      if (source.ruleCode?.isNotEmpty == true) {
+        var result = await _createHeadlessWebView(source.ruleCode!, source.url ?? "");
+
+        if (!result) {
+          print("_createHeadlessWebView 加载失败:[${source.url}]");
+          continue;
+        }
+
+        if (_headlessWebView?.isRunning() == true) {
+          print("开始请求数据:[${source.url}]");
+
+          if (_headlessWebView?.isRunning() ?? false) {
+            try {
+              var responseStream = ReaderDataManager.resultStream.stream;
+              Future<List<dynamic>> futureResponse = responseStream.first;
+              await _headlessWebView?.webViewController?.evaluateJavascript(source: "getReaderData('${source.url}')");
+
+              // 等待getReaderData返回
+              List<dynamic> response = await futureResponse.timeout(const Duration(seconds: 5 * 60), onTimeout: () => []);
+              print("=============START===============");
+              List<ReaderData> dataList = [];
+              for (var data in response) {
+                var entity = ReaderDataEntity.fromJson(data);
+                print("entity --> [$entity]");
+                if (entity.url?.isNotEmpty == true) {
+                  if (await DBServerReaderData.getSourceFromUrl(entity.url!) == null) {
+                    dataList.add(entity.toReaderData(source));
+                  }
+                }
+              }
+              print("=============END===============");
+              // 校验内部格式是否正确，必填字段是否存在
+              if (dataList.isNotEmpty) {
+                var result = await DBServerReaderData.inserts(dataList);
+                print("保存完毕:[${dataList.length}] [$result]");
+              }
+            } catch (e) {
+              print("规则运行失败，请重试1");
+            }
+          } else {
+            print("规则运行失败，请重试2");
+          }
+        }
+      }
     }
   }
 

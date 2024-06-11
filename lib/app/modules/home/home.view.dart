@@ -16,6 +16,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:work/app/components/keep_alive.dart';
 import 'package:work/app/data/collections/reader_data.dart';
 import 'package:work/app/data/collections/source.dart';
+import 'package:work/app/plugin/reader_data_manager.dart';
 import 'package:work/app/routes/app_pages.dart';
 import 'package:work/app/utils/dialog_util.dart';
 
@@ -152,6 +153,7 @@ class HomeView extends GetView<HomeController> {
                       GestureDetector(
                         onTap: () {
                           DialogUtil.showToast("刷新");
+                          ReaderDataManager.refreshReaderData();
                         },
                         child: Icon(Icons.refresh_rounded),
                       ),
@@ -278,9 +280,12 @@ class HomeView extends GetView<HomeController> {
                   // TODO 内容
                   ContentHtmlWidget(html: '''${data.htmlContent}'''),
                   // TODO 视频 + 图片
-                  _buildImageVideoList(data),
+                  data.images?.isNotEmpty == true ? _buildImageVideoList(data) : SizedBox.shrink(),
                   // TODO url,来源
                   // TODO 导出富文本展示
+                  SizedBox(
+                    height: 8,
+                  ),
                   EasyRichText(
                     "来源: ${data.url}",
                     patternList: [
@@ -379,7 +384,7 @@ class _ContentHtmlWidgetState extends State<ContentHtmlWidget> {
       children: [
         Container(
           key: _columnKey,
-          height: isFold ? 240 : null,
+          height: isFold ? 140 : null,
           child: SingleChildScrollView(
             physics: const NeverScrollableScrollPhysics(),
             child: Column(

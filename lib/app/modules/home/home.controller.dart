@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
@@ -12,6 +14,8 @@ class HomeController extends GetxController {
 
   Rx<int> curIndex = 1.obs;
 
+  StreamSubscription? _readerDataObs;
+
   /// TODO 上次更新时间
   /// TODO 更新状态
 
@@ -20,12 +24,16 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    DBServerReaderData.getAll().then((value) => dataList.value = value);
     pageController.addListener(() {
       if ((pageController.page?.floor() ?? 1) != curIndex.value) {
         curIndex.value = pageController.page?.floor() ?? 1;
         print("addListener:[${pageController.page?.floor() ?? 1}]");
       }
+    });
+
+    /// 监听数据库变化
+    _readerDataObs = DBServer().isar.readerDatas.watchLazy(fireImmediately: true).listen((_) async {
+      DBServerReaderData.getAll().then((value) => dataList.value = value);
     });
   }
 
@@ -40,6 +48,7 @@ class HomeController extends GetxController {
 
   @override
   void onClose() {
+    _readerDataObs?.cancel();
     super.onClose();
   }
 }
