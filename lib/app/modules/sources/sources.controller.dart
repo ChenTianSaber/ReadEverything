@@ -13,6 +13,7 @@ import 'package:work/app/data/beans/reader_data_entity.dart';
 import 'package:work/app/data/collections/reader_data.dart';
 import 'package:work/app/data/collections/source.dart';
 import 'package:work/app/data/db/db_server.dart';
+import 'package:work/app/modules/home/home.view.dart';
 import 'package:work/app/plugin/reader_data_manager.dart';
 import 'package:work/app/utils/common_utils.dart';
 import 'package:work/app/utils/dialog_util.dart';
@@ -201,7 +202,7 @@ class SourcesController extends GetxController {
           var dbRes1 = await DBServerSource.inserts([source]);
           // 将获取到的数据也存入
           for (var entity in entities) {
-            readDataList.add(entity.toReaderData(source));
+            readDataList.add(entity.toReaderData(source)..listType = ListType.library);
           }
           var dbRes2 = await DBServerReaderData.inserts(readDataList);
           print("DBServerSource:[$dbRes1]/[$source] DBServerReaderData:[$dbRes2]/[${readDataList.length}]");

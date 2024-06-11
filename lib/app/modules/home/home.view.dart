@@ -145,7 +145,7 @@ class HomeView extends GetView<HomeController> {
                           child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 36.0),
                         child: Text(
-                          "${controller.bottomStateStr.value}${controller.bottomUnReadStr.value}",
+                          "${controller.bottomStateStr.value}${controller.curIndex.value == 1 ? controller.bottomUnReadStr.value : ""}",
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 12),
                           maxLines: 2,
@@ -155,7 +155,7 @@ class HomeView extends GetView<HomeController> {
                       GestureDetector(
                         onTap: () {
                           DialogUtil.showToast("刷新");
-                          ReaderDataManager.refreshReaderData();
+                          controller.refreshList();
                         },
                         child: Icon(Icons.refresh_rounded),
                       ),
@@ -211,19 +211,19 @@ class HomeView extends GetView<HomeController> {
     return PageView(
       controller: controller.pageController,
       children: [
-        KeepAliveWrapper(child: _buildList(ListType.history)),
-        KeepAliveWrapper(child: _buildList(ListType.library)),
-        KeepAliveWrapper(child: _buildList(ListType.collection)),
+        KeepAliveWrapper(child: _buildList(ListType.history, controller.historyDataList)),
+        KeepAliveWrapper(child: _buildList(ListType.library, controller.libraryDataList)),
+        KeepAliveWrapper(child: _buildList(ListType.collection, controller.collectionDataList)),
       ],
     );
   }
 
-  Widget _buildList(ListType type) {
+  Widget _buildList(ListType type, RxList<ReaderData> list) {
     return Obx(() => ScrollablePositionedList.builder(
-          itemCount: controller.dataList.length,
+          itemCount: list.length,
           itemPositionsListener: controller.itemPositionsListener,
           itemBuilder: (BuildContext context, int index) {
-            ReaderData data = controller.dataList[index];
+            ReaderData data = list[index];
             return _buildListItem(data);
           },
         ));

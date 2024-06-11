@@ -21,9 +21,6 @@ class ReaderDataManager {
   /// 是否处于刷新中
   static var inRefresh = false.obs;
 
-  /// 队列是否已经初始化
-  static bool _isInit = false;
-
   /// 无头浏览器
   static HeadlessInAppWebView? _headlessWebView;
 
@@ -33,24 +30,7 @@ class ReaderDataManager {
   /// 创建结果监听
   static final StreamController<bool> _createStream = StreamController.broadcast();
 
-  /// 定时拉取所有源的数据
-  /// 暂时不定时
-  static init() async {
-    if (_isInit) {
-      // 队列已经初始化
-      return;
-    }
-
-    _isInit = true;
-
-    while (_isInit) {
-      await refreshReaderData();
-
-      // 每 30分钟 执行一次
-      await Future.delayed(const Duration(minutes: 30));
-    }
-  }
-
+  /// 拉取所有源的数据
   static refreshReaderData() async {
     inRefresh.value = true;
     // 拉取所有数据
@@ -93,7 +73,7 @@ class ReaderDataManager {
                 print("entity --> [$entity]");
                 if (entity.url?.isNotEmpty == true) {
                   if (await DBServerReaderData.getSourceFromUrl(entity.url!) == null) {
-                    dataList.add(entity.toReaderData(source));
+                    dataList.add(entity.toReaderData(source)..listType = ListType.library);
                   }
                 }
               }
