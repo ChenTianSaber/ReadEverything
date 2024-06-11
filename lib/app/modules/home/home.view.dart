@@ -403,6 +403,9 @@ class _ContentHtmlWidgetState extends State<ContentHtmlWidget> {
                   },
                   customStylesBuilder: (element) {
                     // print("customWidgetBuilder:[${element}]");
+                    if (element.localName == "a") {
+                      return {'color': '#1f1f1f'};
+                    }
                     return {'margin': '0px'};
                   },
                   renderMode: RenderMode.column,
@@ -432,17 +435,37 @@ class _ContentHtmlWidgetState extends State<ContentHtmlWidget> {
                     ),
                   )
                 : null,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        isFold = !isFold;
-                      });
-                    },
-                    child: Text(isFold ? "展开" : "收起"))
-              ],
+            child: Container(
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 28,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            isFold = !isFold;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.blueAccent,
+                          backgroundColor: Colors.white,
+                          // 文字颜色/ 阴影高度
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50), // 圆角
+                          ),
+                          elevation: 2,
+                          shadowColor: Colors.black.withOpacity(0.4),
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0), // 内边距
+                        ),
+                        child: Text(
+                          isFold ? "▼ 展开" : "▲ 收起",
+                          style: TextStyle(fontSize: 12),
+                        )),
+                  )
+                ],
+              ),
             ),
           ),
         ),
