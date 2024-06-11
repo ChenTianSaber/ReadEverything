@@ -11,6 +11,7 @@ import 'package:work/app/data/db/db_server.dart';
 import 'package:work/app/data/db/sp_server.dart';
 import 'package:work/app/modules/home/home.view.dart';
 import 'package:work/app/plugin/reader_data_manager.dart';
+import 'package:html/parser.dart' as html_parser;
 
 class HomeController extends GetxController {
   /// 数据 List
@@ -111,6 +112,11 @@ class HomeController extends GetxController {
           });
     }
     await ReaderDataManager.refreshReaderData();
+  }
+
+  String getHtmlText(String htmlContent){
+    final document = html_parser.parse(htmlContent);
+    return document.body?.text ?? '';
   }
 
   @override

@@ -2,24 +2,17 @@ import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flustars/flustars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/routes/get_transition_mixin.dart';
-import 'package:path/path.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:work/app/components/keep_alive.dart';
 import 'package:work/app/data/collections/reader_data.dart';
 import 'package:work/app/data/collections/source.dart';
-import 'package:work/app/data/db/sp_server.dart';
-import 'package:work/app/plugin/reader_data_manager.dart';
 import 'package:work/app/routes/app_pages.dart';
+import 'package:work/app/utils/common_utils.dart';
 import 'package:work/app/utils/dialog_util.dart';
 
 import 'home.controller.dart';
@@ -235,7 +228,6 @@ class HomeView extends GetView<HomeController> {
     // print("_buildListItem source:[${source?.url}]");
     return Column(
       children: [
-        Divider(height: 0.2),
         InkWell(
           onTap: () async {
             if (data.url?.isNotEmpty == true) {
@@ -249,67 +241,92 @@ class HomeView extends GetView<HomeController> {
           child: Container(
             width: double.infinity,
             child: Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // TODO 标题
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12.0),
-                    child: Text(
-                      "${data.title}",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black87),
-                    ),
-                  ),
                   // TODO 源名称 作者 时间
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0, bottom: 14),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(20.0), // 设置圆角半径
-                          child: Image.network('https://picsum.photos/250?image=9', width: 20, height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // ClipRRect(
+                      //   borderRadius: BorderRadius.circular(20.0), // 设置圆角半径
+                      //   child: Image.network('https://picsum.photos/250?image=9', width: 20, height: 20),
+                      // ),
+                      // SizedBox(
+                      //   width: 8,
+                      // ),
+                      Text(
+                        "${source?.name?.isNotEmpty == true ? "${source?.name}@" : ""}${data.author}",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
                         ),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text(
-                          "${source?.name ?? "unknown"}@${data.author} - ${DateUtil.formatDateMs(data.publishTime ?? DateTime.now().millisecondsSinceEpoch, format: DateFormats.full)}",
-                          style: TextStyle(fontSize: 13, color: Colors.black87),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // TODO 内容
-                  ContentHtmlWidget(html: '''${data.htmlContent}'''),
-                  // TODO 视频 + 图片
-                  data.images?.isNotEmpty == true ? _buildImageVideoList(data) : SizedBox.shrink(),
-                  // TODO url,来源
-                  // TODO 导出富文本展示
-                  SizedBox(
-                    height: 8,
-                  ),
-                  EasyRichText(
-                    "来源: ${data.url}",
-                    patternList: [
-                      EasyRichTextPattern(
-                        targetString: "来源: ",
-                        style: TextStyle(fontSize: 13, color: Colors.black87),
                       ),
-                      EasyRichTextPattern(
-                        targetString: "${data.url}",
-                        style: TextStyle(fontSize: 13, color: Colors.blueAccent),
+                      Text(
+                        "${CommonUtils.formatDate(data.publishTime ?? DateTime.now().millisecondsSinceEpoch)} →",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: Colors.black45,
+                        ),
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  // TODO 标题
+                  Text(
+                    "${data.title}",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                      height: 1.6,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  // TODO 内容
+                  Text(
+                    controller.getHtmlText('''${data.htmlContent}'''),
+                    style: TextStyle(
+                      fontSize: 16,
+                      height: 1.5,
+                    ),
+                    maxLines: 6,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  // ContentHtmlWidget(html: '''${data.htmlContent}'''),
+                  // TODO 视频 + 图片
+                  // data.images?.isNotEmpty == true ? _buildImageVideoList(data) : SizedBox.shrink(),
+                  // TODO url,来源
+                  // TODO 导出富文本展示
+                  // SizedBox(
+                  //   height: 8,
+                  // ),
+                  // EasyRichText(
+                  //   "来源: ${data.url}",
+                  //   patternList: [
+                  //     EasyRichTextPattern(
+                  //       targetString: "来源: ",
+                  //       style: TextStyle(fontSize: 13, color: Colors.black87),
+                  //     ),
+                  //     EasyRichTextPattern(
+                  //       targetString: "${data.url}",
+                  //       style: TextStyle(fontSize: 13, color: Colors.blueAccent),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),
           ),
         ),
-        Divider(height: 0.2),
-        SizedBox(
-          height: 16,
+        const Divider(
+          height: 0.1,
+          color: Colors.black12,
         )
       ],
     );
