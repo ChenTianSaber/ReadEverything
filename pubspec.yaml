@@ -23,6 +23,8 @@ dependencies:
   easy_rich_text: ^2.1.0
   photo_view: ^0.15.0
   flustars: ^2.0.1
+  shared_preferences: ^2.2.3
+  scrollable_positioned_list: ^0.3.8
 
 dev_dependencies: 
   flutter_lints: 3.0.0

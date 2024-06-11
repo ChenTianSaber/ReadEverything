@@ -13,9 +13,11 @@ import 'package:get/get_navigation/src/routes/get_transition_mixin.dart';
 import 'package:path/path.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:work/app/components/keep_alive.dart';
 import 'package:work/app/data/collections/reader_data.dart';
 import 'package:work/app/data/collections/source.dart';
+import 'package:work/app/data/db/sp_server.dart';
 import 'package:work/app/plugin/reader_data_manager.dart';
 import 'package:work/app/routes/app_pages.dart';
 import 'package:work/app/utils/dialog_util.dart';
@@ -143,7 +145,7 @@ class HomeView extends GetView<HomeController> {
                           child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 36.0),
                         child: Text(
-                          "还剩 18 未读\n上次更新: 2024-6-2 14:38:42",
+                          "${controller.bottomStateStr.value}${controller.bottomUnReadStr.value}",
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 12),
                           maxLines: 2,
@@ -217,9 +219,9 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget _buildList(ListType type) {
-    return Obx(() => ListView.builder(
-          shrinkWrap: true,
+    return Obx(() => ScrollablePositionedList.builder(
           itemCount: controller.dataList.length,
+          itemPositionsListener: controller.itemPositionsListener,
           itemBuilder: (BuildContext context, int index) {
             ReaderData data = controller.dataList[index];
             return _buildListItem(data);

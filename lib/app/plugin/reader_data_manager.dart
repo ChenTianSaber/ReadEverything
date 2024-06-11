@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:get/get.dart';
 import 'package:work/app/data/beans/reader_data_entity.dart';
 import 'package:work/app/data/collections/reader_data.dart';
 import 'package:work/app/data/collections/source.dart';
 import 'package:work/app/data/db/db_server.dart';
+import 'package:work/app/modules/home/home.view.dart';
 import 'package:work/app/utils/common_utils.dart';
 import 'package:work/app/utils/stream_util.dart';
 
@@ -15,6 +17,9 @@ class ReaderDataManager {
   factory ReaderDataManager() => _instance;
 
   static final ReaderDataManager _instance = ReaderDataManager._internal();
+
+  /// 是否处于刷新中
+  static var inRefresh = false.obs;
 
   /// 队列是否已经初始化
   static bool _isInit = false;
@@ -47,6 +52,7 @@ class ReaderDataManager {
   }
 
   static refreshReaderData() async {
+    inRefresh.value = true;
     // 拉取所有数据
     var sources = await DBServerSource.getAll();
     for (Source source in sources) {
@@ -55,8 +61,19 @@ class ReaderDataManager {
 
         if (!result) {
           print("_createHeadlessWebView 加载失败:[${source.url}]");
+          DBServerSource.update(
+              url: source.url ?? "",
+              updateBuilder: (newItem) {
+                newItem.updateResultType = LastUpdateType.fail;
+              });
           continue;
         }
+
+        DBServerSource.update(
+            url: source.url ?? "",
+            updateBuilder: (newItem) {
+              newItem.updateResultType = LastUpdateType.refreshing;
+            });
 
         if (_headlessWebView?.isRunning() == true) {
           print("开始请求数据:[${source.url}]");
@@ -86,15 +103,38 @@ class ReaderDataManager {
                 var result = await DBServerReaderData.inserts(dataList);
                 print("保存完毕:[${dataList.length}] [$result]");
               }
+
+              DBServerSource.update(
+                  url: source.url ?? "",
+                  updateBuilder: (newItem) {
+                    newItem.updateResultType = LastUpdateType.success;
+                  });
             } catch (e) {
               print("规则运行失败，请重试1");
+              DBServerSource.update(
+                  url: source.url ?? "",
+                  updateBuilder: (newItem) {
+                    newItem.updateResultType = LastUpdateType.fail;
+                  });
             }
           } else {
             print("规则运行失败，请重试2");
+            DBServerSource.update(
+                url: source.url ?? "",
+                updateBuilder: (newItem) {
+                  newItem.updateResultType = LastUpdateType.fail;
+                });
           }
         }
+      } else {
+        DBServerSource.update(
+            url: source.url ?? "",
+            updateBuilder: (newItem) {
+              newItem.updateResultType = LastUpdateType.fail;
+            });
       }
     }
+    inRefresh.value = false;
   }
 
   static Future<bool> _createHeadlessWebView(String ruleHtml, String sourceUrl) async {
@@ -160,5 +200,17 @@ class ReaderDataManager {
     } finally {
       mtx.give();
     }
+  }
+
+  /// 获取失败的 Source 数
+  static getFailSourceSum() async {
+    var sources = await DBServerSource.getAll();
+    var failSum = 0;
+    for (Source source in sources) {
+      if (source.updateResultType == LastUpdateType.fail) {
+        failSum++;
+      }
+    }
+    return failSum;
   }
 }
