@@ -118,7 +118,7 @@ class HomeController extends GetxController {
     super.onReady();
     print("跳转:[${SPServer.getLastLibraryIndex()}]");
     Future.delayed(Duration(milliseconds: 500), () {
-      itemScrollController.jumpTo(index: SPServer.getLastLibraryIndex());
+      if (curIndex.value == 1) itemScrollController.jumpTo(index: SPServer.getLastLibraryIndex());
     });
   }
 
