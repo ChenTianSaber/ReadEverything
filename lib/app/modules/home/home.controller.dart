@@ -39,7 +39,7 @@ class HomeController extends GetxController {
   /// TODO 上次更新时间
   /// TODO 更新状态
 
-  final PageController pageController = PageController(initialPage: 1);
+  late PageController pageController;
 
   void _updateVisibleItems() {
     final positions = itemPositionsListener.itemPositions.value;
@@ -54,6 +54,10 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    curIndex.value = SPServer.getLastTabIndex();
+    pageController = PageController(initialPage: SPServer.getLastTabIndex());
+
     itemPositionsListener.itemPositions.addListener(_updateVisibleItems);
     workers.workers.add(ever(ReaderDataManager.inRefresh, (callback) async {
       StringBuffer buffer = StringBuffer();
@@ -70,6 +74,7 @@ class HomeController extends GetxController {
     pageController.addListener(() {
       if ((pageController.page?.floor() ?? 1) != curIndex.value) {
         curIndex.value = pageController.page?.floor() ?? 1;
+        SPServer.setTabIndex(curIndex.value);
         print("addListener:[${pageController.page?.floor() ?? 1}]");
       }
     });

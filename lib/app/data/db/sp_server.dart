@@ -1,7 +1,7 @@
 import 'package:work/app/utils/storage_util.dart';
 
 class SPServer {
-  ///存入 sp 的key
+  /// 上次更新时间
   static String get _lastUpdateTime => "last_update_time";
 
   static int getLastUpdateTime() {
@@ -11,4 +11,16 @@ class SPServer {
   static Future<bool> setLastUpdateTime(int time) async {
     return await StorageUtils.setItem(_lastUpdateTime, time);
   }
+
+  /// 上次打开的Tab
+  static String get _lastTabIndex => "last_tab_index";
+
+  static int getLastTabIndex() {
+    return StorageUtils.getItem(_lastTabIndex) ?? 1;
+  }
+
+  static Future<bool> setTabIndex(int index) async {
+    return await StorageUtils.setItem(_lastTabIndex, index);
+  }
+
 }
