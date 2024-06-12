@@ -37,4 +37,7 @@ class Source {
 
   /// 错误原因 (如果上次更新错误的话)
   String? updateErrorTip;
+
+  /// 源站地址
+  String? link;
 }

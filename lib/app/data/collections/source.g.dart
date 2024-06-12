@@ -27,39 +27,44 @@ const SourceSchema = CollectionSchema(
       name: r'lastUpdateTime',
       type: IsarType.long,
     ),
-    r'name': PropertySchema(
+    r'link': PropertySchema(
       id: 2,
+      name: r'link',
+      type: IsarType.string,
+    ),
+    r'name': PropertySchema(
+      id: 3,
       name: r'name',
       type: IsarType.string,
     ),
     r'ruleCode': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'ruleCode',
       type: IsarType.string,
     ),
     r'ruleName': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'ruleName',
       type: IsarType.string,
     ),
     r'ruleUrl': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'ruleUrl',
       type: IsarType.string,
     ),
     r'updateErrorTip': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'updateErrorTip',
       type: IsarType.string,
     ),
     r'updateResultType': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'updateResultType',
       type: IsarType.long,
       enumMap: _SourceupdateResultTypeEnumValueMap,
     ),
     r'url': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'url',
       type: IsarType.string,
     )
@@ -100,6 +105,12 @@ int _sourceEstimateSize(
   var bytesCount = offsets.last;
   {
     final value = object.icon;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.link;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -151,13 +162,14 @@ void _sourceSerialize(
 ) {
   writer.writeString(offsets[0], object.icon);
   writer.writeLong(offsets[1], object.lastUpdateTime);
-  writer.writeString(offsets[2], object.name);
-  writer.writeString(offsets[3], object.ruleCode);
-  writer.writeString(offsets[4], object.ruleName);
-  writer.writeString(offsets[5], object.ruleUrl);
-  writer.writeString(offsets[6], object.updateErrorTip);
-  writer.writeLong(offsets[7], object.updateResultType?.value);
-  writer.writeString(offsets[8], object.url);
+  writer.writeString(offsets[2], object.link);
+  writer.writeString(offsets[3], object.name);
+  writer.writeString(offsets[4], object.ruleCode);
+  writer.writeString(offsets[5], object.ruleName);
+  writer.writeString(offsets[6], object.ruleUrl);
+  writer.writeString(offsets[7], object.updateErrorTip);
+  writer.writeLong(offsets[8], object.updateResultType?.value);
+  writer.writeString(offsets[9], object.url);
 }
 
 Source _sourceDeserialize(
@@ -169,14 +181,15 @@ Source _sourceDeserialize(
   final object = Source();
   object.icon = reader.readStringOrNull(offsets[0]);
   object.lastUpdateTime = reader.readLongOrNull(offsets[1]);
-  object.name = reader.readStringOrNull(offsets[2]);
-  object.ruleCode = reader.readStringOrNull(offsets[3]);
-  object.ruleName = reader.readStringOrNull(offsets[4]);
-  object.ruleUrl = reader.readStringOrNull(offsets[5]);
-  object.updateErrorTip = reader.readStringOrNull(offsets[6]);
+  object.link = reader.readStringOrNull(offsets[2]);
+  object.name = reader.readStringOrNull(offsets[3]);
+  object.ruleCode = reader.readStringOrNull(offsets[4]);
+  object.ruleName = reader.readStringOrNull(offsets[5]);
+  object.ruleUrl = reader.readStringOrNull(offsets[6]);
+  object.updateErrorTip = reader.readStringOrNull(offsets[7]);
   object.updateResultType =
-      _SourceupdateResultTypeValueEnumMap[reader.readLongOrNull(offsets[7])];
-  object.url = reader.readStringOrNull(offsets[8]);
+      _SourceupdateResultTypeValueEnumMap[reader.readLongOrNull(offsets[8])];
+  object.url = reader.readStringOrNull(offsets[9]);
   return object;
 }
 
@@ -202,9 +215,11 @@ P _sourceDeserializeProp<P>(
     case 6:
       return (reader.readStringOrNull(offset)) as P;
     case 7:
+      return (reader.readStringOrNull(offset)) as P;
+    case 8:
       return (_SourceupdateResultTypeValueEnumMap[
           reader.readLongOrNull(offset)]) as P;
-    case 8:
+    case 9:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -688,6 +703,151 @@ extension SourceQueryFilter on QueryBuilder<Source, Source, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> linkIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'link',
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> linkIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'link',
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> linkEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'link',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> linkGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'link',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> linkLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'link',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> linkBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'link',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> linkStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'link',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> linkEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'link',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> linkContains(String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'link',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> linkMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'link',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> linkIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'link',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterFilterCondition> linkIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'link',
+        value: '',
       ));
     });
   }
@@ -1668,6 +1828,18 @@ extension SourceQuerySortBy on QueryBuilder<Source, Source, QSortBy> {
     });
   }
 
+  QueryBuilder<Source, Source, QAfterSortBy> sortByLink() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'link', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterSortBy> sortByLinkDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'link', Sort.desc);
+    });
+  }
+
   QueryBuilder<Source, Source, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1790,6 +1962,18 @@ extension SourceQuerySortThenBy on QueryBuilder<Source, Source, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Source, Source, QAfterSortBy> thenByLink() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'link', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Source, Source, QAfterSortBy> thenByLinkDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'link', Sort.desc);
+    });
+  }
+
   QueryBuilder<Source, Source, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1889,6 +2073,13 @@ extension SourceQueryWhereDistinct on QueryBuilder<Source, Source, QDistinct> {
     });
   }
 
+  QueryBuilder<Source, Source, QDistinct> distinctByLink(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'link', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Source, Source, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1955,6 +2146,12 @@ extension SourceQueryProperty on QueryBuilder<Source, Source, QQueryProperty> {
   QueryBuilder<Source, int?, QQueryOperations> lastUpdateTimeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lastUpdateTime');
+    });
+  }
+
+  QueryBuilder<Source, String?, QQueryOperations> linkProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'link');
     });
   }
 

@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -9,7 +11,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
+import 'package:rss_dart/domain/atom_feed.dart';
+import 'package:rss_dart/domain/rss1_feed.dart';
+import 'package:rss_dart/domain/rss_feed.dart';
 import 'package:work/app/data/beans/reader_data_entity.dart';
+import 'package:work/app/data/beans/source_icon_entity.dart';
 import 'package:work/app/data/collections/reader_data.dart';
 import 'package:work/app/data/collections/source.dart';
 import 'package:work/app/data/db/db_server.dart';
@@ -23,14 +29,22 @@ class SourcesController extends GetxController {
   /// 无头浏览器
   HeadlessInAppWebView? headlessWebView;
 
+  var curStep = 1.obs;
+
+  final dio = Dio();
+
   /// 解析规则
   var ruleHtml = "".obs;
 
   /// 解析 Title
   var ruleTitle = "".obs;
 
+  Source source = Source();
+
   /// 输入控制器
   final TextEditingController urlEditController = TextEditingController();
+
+  final TextEditingController nameEditController = TextEditingController();
 
   @override
   Future<void> onInit() async {
@@ -214,6 +228,60 @@ class SourcesController extends GetxController {
       }
     } else {
       DialogUtil.showToast("规则运行失败，请重试");
+    }
+  }
+
+  /// 请求数据源信息，确认是否能正常访问
+  requestSource() async {
+    source = Source();
+    try {
+      DialogUtil.showLoading();
+      var url = urlEditController.text;
+      final response = await dio.get(url);
+      print("requestSource:--> [${response.data.toString()}]");
+
+      RssFeed? rssFeed;
+      AtomFeed? atomFeed;
+      Rss1Feed? rss1Feed;
+
+      try {
+        rssFeed = RssFeed.parse(response.data.toString());
+        atomFeed = AtomFeed.parse(response.data.toString());
+        rss1Feed = Rss1Feed.parse(response.data.toString());
+      } catch (_) {}
+
+      print("rssFeed:--> [${rssFeed?.title}]  [${rssFeed?.link}] [${rssFeed?.description}]");
+      print("atomFeed:--> [$atomFeed]");
+      print("rss1Feed:--> [$rss1Feed]");
+
+      source.url = url;
+      source.name = rssFeed?.title;
+      source.link = rssFeed?.link;
+
+      // TODO 获取 icon
+      // https://besticon-demo.herokuapp.com/allicons.json?url=https%3a%2f%2fsspai.com
+      try {
+        final rsp = await dio.get('''https://besticon-demo.herokuapp.com/allicons.json?url=${rssFeed?.link}''');
+        SourceIconEntity entity = SourceIconEntity.fromJson(rsp.data);
+        print("entity:--> [$entity]");
+        if (entity.icons?.isNotEmpty == true) {
+          for (var data in entity.icons!) {
+            if (data.format == "png" || data.format == "jpg") {
+              source.icon = data.url!;
+              break;
+            }
+          }
+        }
+      } catch (_) {}
+
+      print("获取完毕");
+
+      curStep.value = 2;
+      nameEditController.text = source.name ?? "unknown";
+    } catch (e) {
+      DialogUtil.showToast("请求失败，请确认网络和 url 是否可以正常访问");
+    } finally {
+      DialogUtil.hideLoading();
     }
   }
 }
