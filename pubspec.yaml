@@ -25,7 +25,7 @@ dependencies:
   flustars: ^2.0.1
   shared_preferences: ^2.2.3
   scrollable_positioned_list: ^0.3.8
-  flutter_html: ^2.1.2
+  rss_dart: ^1.0.9
 
 dev_dependencies: 
   flutter_lints: 3.0.0

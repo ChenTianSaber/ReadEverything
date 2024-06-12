@@ -2,6 +2,7 @@ import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flustars/flustars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
@@ -278,26 +279,60 @@ class HomeView extends GetView<HomeController> {
                     height: 12,
                   ),
                   // TODO 标题
-                  Text(
-                    "${data.title}",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                      height: 1.6,
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "${data.title}",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                            height: 1.6,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: data.images?.isNotEmpty == true ? 16 : 0),
+                      data.images?.isNotEmpty == true
+                          ? Container(
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(2.0)),
+                              clipBehavior: Clip.hardEdge,
+                              child: Image.network(
+                                fit: BoxFit.cover,
+                                data.images![0],
+                                width: 82,
+                                height: 82,
+                                errorBuilder: (_, __, ___) => Container(
+                                  height: 82,
+                                  width: 82,
+                                  color: Colors.black12,
+                                  child: Center(
+                                      child: Text(
+                                    "Error",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black26,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )),
+                                ),
+                              ),
+                            )
+                          : SizedBox.shrink(),
+                    ],
                   ),
-                  SizedBox(height: 6),
+                  // SizedBox(height: 6),
                   // TODO 内容
-                  Text(
-                    controller.getHtmlText('''${data.htmlContent}'''),
-                    style: TextStyle(
-                      fontSize: 16,
-                      height: 1.5,
-                    ),
-                    maxLines: 6,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  // Text(
+                  //   controller.getHtmlText('''${data.htmlContent}'''),
+                  //   style: TextStyle(
+                  //     fontSize: 16,
+                  //     height: 1.5,
+                  //   ),
+                  //   maxLines: 6,
+                  //   overflow: TextOverflow.ellipsis,
+                  // ),
                   // ContentHtmlWidget(html: '''${data.htmlContent}'''),
                   // TODO 视频 + 图片
                   // data.images?.isNotEmpty == true ? _buildImageVideoList(data) : SizedBox.shrink(),
@@ -324,8 +359,8 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
         ),
-        const Divider(
-          height: 0.1,
+        Container(
+          height: 0.3,
           color: Colors.black12,
         )
       ],
