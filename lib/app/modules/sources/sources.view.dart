@@ -133,9 +133,12 @@ class SourcesView extends GetView<SourcesController> {
                   SizedBox(
                     height: 4,
                   ),
-                  Text(
-                    controller.source.url ?? "",
-                    style: TextStyle(fontSize: 14, color: Colors.black54),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 6.0),
+                    child: Text(
+                      controller.source.url ?? "",
+                      style: TextStyle(fontSize: 14, color: Colors.black54),
+                    ),
                   ),
                 ],
               ))
