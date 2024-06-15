@@ -219,6 +219,7 @@ class SourcesController extends GetxController {
           var dbRes2 = await DBServerReaderData.inserts(readDataList);
           print("DBServerSource:[$dbRes1]/[$source] DBServerReaderData:[$dbRes2]/[${readDataList.length}]");
           DialogUtil.showToast("已存入");
+          Get.back();
         }
       } finally {
         mtx.give();

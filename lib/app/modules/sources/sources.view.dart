@@ -28,6 +28,7 @@ class SourcesView extends GetView<SourcesController> {
                     controller.requestSource();
                   } else if (controller.curStep.value == 2) {
                     // TODO 保存源和数据
+                    controller.saveSource();
                   }
                 },
                 child: Container(
