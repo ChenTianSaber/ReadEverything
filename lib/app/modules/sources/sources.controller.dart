@@ -1,14 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:rss_dart/domain/atom_feed.dart';
@@ -283,5 +281,28 @@ class SourcesController extends GetxController {
     } finally {
       DialogUtil.hideLoading();
     }
+  }
+
+  /// 查看规则代码
+  showCodeView() {
+    DialogUtil.bottomSheet(SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 32),
+        child:
+        EasyRichText(
+          ruleHtml.value,
+          patternList: [
+            EasyRichTextPattern(
+              targetString: "function",
+              style: TextStyle(color: Colors.blueAccent,fontWeight: FontWeight.bold),
+            ),
+            EasyRichTextPattern(
+              targetString: "getReaderData",
+              style: TextStyle(color: Colors.redAccent,fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    ));
   }
 }

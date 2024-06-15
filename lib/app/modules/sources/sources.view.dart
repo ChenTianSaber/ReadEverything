@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:get/get.dart';
+import 'package:work/app/utils/dialog_util.dart';
 
 import 'sources.controller.dart';
 
@@ -143,7 +145,114 @@ class SourcesView extends GetView<SourcesController> {
                 ],
               ))
             ],
-          )
+          ),
+          SizedBox(
+            height: 24,
+          ),
+          GestureDetector(
+            onTap: () {
+              if(controller.ruleHtml.isNotEmpty == true){
+                DialogUtil.showToast("查看代码");
+                controller.showCodeView();
+              }else{
+                DialogUtil.showToast("请选取规则");
+                controller.chooseRule();
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        controller.ruleHtml.isNotEmpty == true
+                            ? Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap:(){
+                                      // TODO
+                                      DialogUtil.showToast("删除TODO");
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                                      ),
+                                      width: 16,
+                                      height: 16,
+                                      child: Icon(
+                                        size: 12,
+                                        Icons.close,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 6,
+                                  ),
+                                  Text(
+                                    controller.ruleTitle.value,
+                                    style: TextStyle(fontSize: 16, color: Colors.blueAccent, fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )
+                            : Text(
+                                "添加源数据解析规则",
+                                style: TextStyle(fontSize: 16, color: Colors.black87, fontWeight: FontWeight.bold),
+                              ),
+                        Text(
+                          "→",
+                          style: TextStyle(fontSize: 16, color: Colors.black87, fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                    Text(
+                      "该规则用于描述如何从源url中获取数据",
+                      style: TextStyle(fontSize: 14, color: Colors.black54),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          GestureDetector(
+            onTap: () {
+              DialogUtil.showToast("施工中...");
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "添加内容解析规则（TODO）",
+                          style: TextStyle(fontSize: 16, color: Colors.black87, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "→",
+                          style: TextStyle(fontSize: 16, color: Colors.black87, fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                    Text(
+                      "该规则用于描述如何从源数据中解析出对应的可阅读内容",
+                      style: TextStyle(fontSize: 14, color: Colors.black54),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
