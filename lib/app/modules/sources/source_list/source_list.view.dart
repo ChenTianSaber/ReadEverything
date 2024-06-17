@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:work/app/components/source_icon.dart';
 import 'package:work/app/data/collections/source.dart';
 
 import 'source_list.controller.dart';
@@ -29,11 +30,23 @@ class SourceListView extends GetView<SourceListController> {
                   color: Colors.white,
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
                       children: [
-                        Text("${source.url}"),
-                        Text("${source.ruleName}"),
+                        SourceIcon(icon: source.icon,name: source.name,width: 20,),
+                        SizedBox(width: 12,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("${source.name}"),
+                            Text("${source.url}"),
+                            Row(
+                              children: [
+                                ElevatedButton(onPressed: (){}, child: Text("删除")),
+                                ElevatedButton(onPressed: (){}, child: Text("修改解析规则"))
+                              ],
+                            )
+                          ],
+                        ),
                       ],
                     ),
                   ),
