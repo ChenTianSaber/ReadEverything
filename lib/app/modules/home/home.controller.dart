@@ -14,6 +14,8 @@ import 'package:work/app/plugin/reader_data_manager.dart';
 import 'package:html/parser.dart' as html_parser;
 
 class HomeController extends GetxController {
+  var refreshKey = true.obs;
+
   /// 数据 List
   RxList<ReaderData> libraryDataList = RxList([]);
   RxList<ReaderData> historyDataList = RxList([]);
@@ -43,17 +45,19 @@ class HomeController extends GetxController {
   late PageController pageController;
 
   void _updateVisibleItems() {
-    final positions = itemPositionsListener.itemPositions.value;
-    unreadSum = libraryDataList.length - positions.last.index - 1;
-    if (unreadSum > 0) {
-      bottomUnReadStr.value = "\n下面还有 $unreadSum 个没看";
-    } else {
-      bottomUnReadStr.value = "\n已全部看完!";
-    }
-    if (SPServer.getLastLibraryIndex() != positions.last.index) {
-      print("存入 ${positions.last.index}");
-      SPServer.setLastLibraryIndex(positions.last.index);
-    }
+    try {
+      final positions = itemPositionsListener.itemPositions.value;
+      unreadSum = libraryDataList.length - positions.last.index - 1;
+      if (unreadSum > 0) {
+        bottomUnReadStr.value = "\n下面还有 $unreadSum 个没看";
+      } else {
+        bottomUnReadStr.value = "\n已全部看完!";
+      }
+      if (SPServer.getLastLibraryIndex() != positions.last.index) {
+        print("存入 ${positions.last.index}");
+        SPServer.setLastLibraryIndex(positions.last.index);
+      }
+    } catch (_) {}
   }
 
   @override
@@ -86,15 +90,19 @@ class HomeController extends GetxController {
 
     /// 监听数据库变化
     _libraryReaderDataObs = DBServer().isar.readerDatas.filter().listTypeEqualTo(ListType.library).sortByPublishTimeDesc().build().watch(fireImmediately: true).listen((list) async {
+      print("数据库更新 list:[${list.length}]");
       libraryDataList.value = list;
+      refreshKey.value = !refreshKey.value;
     });
 
     _historyReaderDataObs = DBServer().isar.readerDatas.filter().listTypeEqualTo(ListType.history).sortByPublishTimeDesc().build().watch(fireImmediately: true).listen((list) async {
       historyDataList.value = list;
+      refreshKey.value = !refreshKey.value;
     });
 
     _collectionReaderDataObs = DBServer().isar.readerDatas.filter().listTypeEqualTo(ListType.collection).sortByPublishTimeDesc().build().watch(fireImmediately: true).listen((list) async {
       collectionDataList.value = list;
+      refreshKey.value = !refreshKey.value;
     });
   }
 
@@ -114,7 +122,7 @@ class HomeController extends GetxController {
     await ReaderDataManager.refreshReaderData();
   }
 
-  String getHtmlText(String htmlContent){
+  String getHtmlText(String htmlContent) {
     final document = html_parser.parse(htmlContent);
     return document.body?.text ?? '';
   }
@@ -124,7 +132,7 @@ class HomeController extends GetxController {
     super.onReady();
     print("跳转:[${SPServer.getLastLibraryIndex()}]");
     Future.delayed(Duration(milliseconds: 500), () {
-      if (curIndex.value == 1) itemScrollController.jumpTo(index: SPServer.getLastLibraryIndex());
+      if (curIndex.value == 1 && libraryDataList.isNotEmpty) itemScrollController.jumpTo(index: SPServer.getLastLibraryIndex());
     });
   }
 

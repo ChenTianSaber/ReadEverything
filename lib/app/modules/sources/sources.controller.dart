@@ -207,17 +207,22 @@ class SourcesController extends GetxController {
           DialogUtil.showToast("数据为空，校验失败，请检查返回格式是否正确？");
         } else {
           // 存入 Source 数据库
-          Source source = Source()
+          Source dbSource = Source()
             ..url = sourceUrl
             ..ruleCode = ruleHtml.value
-            ..ruleName = ruleTitle.value;
-          var dbRes1 = await DBServerSource.inserts([source]);
+            ..ruleName = ruleTitle.value
+            ..name = source.name
+            ..icon = source.icon
+            ..link = source.link
+            ..lastUpdateTime = DateTime.now().millisecondsSinceEpoch
+            ..updateResultType = LastUpdateType.success;
+          var dbRes1 = await DBServerSource.inserts([dbSource]);
           // 将获取到的数据也存入
           for (var entity in entities) {
-            readDataList.add(entity.toReaderData(source)..listType = ListType.library);
+            readDataList.add(entity.toReaderData(dbSource)..listType = ListType.library);
           }
           var dbRes2 = await DBServerReaderData.inserts(readDataList);
-          print("DBServerSource:[$dbRes1]/[$source] DBServerReaderData:[$dbRes2]/[${readDataList.length}]");
+          print("DBServerSource:[$dbRes1]/[$dbSource] DBServerReaderData:[$dbRes2]/[${readDataList.length}]");
           DialogUtil.showToast("已存入");
           Get.back();
         }
@@ -260,7 +265,9 @@ class SourcesController extends GetxController {
       // TODO 获取 icon
       // https://besticon-demo.herokuapp.com/allicons.json?url=https%3a%2f%2fsspai.com
       try {
-        final rsp = await dio.get('''https://besticon-demo.herokuapp.com/allicons.json?url=${rssFeed?.link}''');
+        var url = '''https://besticon-demo.herokuapp.com/allicons.json?url=${rssFeed?.link}''';
+        print("url:--> [$url]");
+        final rsp = await dio.get(url);
         SourceIconEntity entity = SourceIconEntity.fromJson(rsp.data);
         print("entity:--> [$entity]");
         if (entity.icons?.isNotEmpty == true) {
@@ -271,7 +278,9 @@ class SourcesController extends GetxController {
             }
           }
         }
-      } catch (_) {}
+      } catch (e) {
+        print("获取icon失败:$e");
+      }
 
       print("获取完毕");
 
@@ -289,17 +298,16 @@ class SourcesController extends GetxController {
     DialogUtil.bottomSheet(SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 32),
-        child:
-        EasyRichText(
+        child: EasyRichText(
           ruleHtml.value,
           patternList: [
             EasyRichTextPattern(
               targetString: "function",
-              style: TextStyle(color: Colors.blueAccent,fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold),
             ),
             EasyRichTextPattern(
               targetString: "getReaderData",
-              style: TextStyle(color: Colors.redAccent,fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
             ),
           ],
         ),

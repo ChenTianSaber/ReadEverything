@@ -202,26 +202,37 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget _buildBody() {
-    return PageView(
-      controller: controller.pageController,
-      children: [
-        KeepAliveWrapper(child: _buildList(ListType.history, controller.historyDataList)),
-        KeepAliveWrapper(child: _buildList(ListType.library, controller.libraryDataList)),
-        KeepAliveWrapper(child: _buildList(ListType.collection, controller.collectionDataList)),
-      ],
-    );
+    return Obx(() {
+      var _ = controller.refreshKey.value;
+      return PageView(
+        controller: controller.pageController,
+        children: [
+          KeepAliveWrapper(child: _buildList(ListType.history, controller.historyDataList)),
+          KeepAliveWrapper(child: _buildList(ListType.library, controller.libraryDataList)),
+          KeepAliveWrapper(child: _buildList(ListType.collection, controller.collectionDataList)),
+        ],
+      );
+    });
   }
 
   Widget _buildList(ListType type, RxList<ReaderData> list) {
-    return Obx(() => ScrollablePositionedList.builder(
-          itemCount: list.length,
-          itemScrollController: type == ListType.library ? controller.itemScrollController : null,
-          itemPositionsListener: type == ListType.library ? controller.itemPositionsListener : null,
-          itemBuilder: (BuildContext context, int index) {
+    if (list.isNotEmpty == true) {
+      return ScrollablePositionedList.builder(
+        itemCount: list.length,
+        itemScrollController: type == ListType.library ? controller.itemScrollController : null,
+        itemPositionsListener: type == ListType.library ? controller.itemPositionsListener : null,
+        itemBuilder: (BuildContext context, int index) {
+          print("构建 List: [${list.length}] === [$index]");
+          if (index >= 0) {
             ReaderData data = list[index];
             return _buildListItem(data);
-          },
-        ));
+          }
+          return SizedBox.shrink();
+        },
+      );
+    } else {
+      return Text("空的");
+    }
   }
 
   Widget _buildListItem(ReaderData data) {
