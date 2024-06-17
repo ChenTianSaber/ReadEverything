@@ -9,6 +9,9 @@ abstract class Routes {
   static const DETAIL = _Paths.DETAIL;
   static const HTML = _Paths.DETAIL + _Paths.HTML;
   static const IMAGEVIEWER = _Paths.IMAGEVIEWER;
+  static const WEBVIEW = _Paths.DETAIL + _Paths.WEBVIEW;
+  static const MARKDOWN = _Paths.DETAIL + _Paths.MARKDOWN;
+  static const VIDEO = _Paths.DETAIL + _Paths.VIDEO;
 }
 
 abstract class _Paths {
@@ -19,4 +22,7 @@ abstract class _Paths {
   static const DETAIL = '/detail';
   static const HTML = '/html';
   static const IMAGEVIEWER = '/imageviewer';
+  static const WEBVIEW = '/webview';
+  static const MARKDOWN = '/markdown';
+  static const VIDEO = '/video';
 }

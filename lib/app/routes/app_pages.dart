@@ -1,12 +1,18 @@
 import 'package:get/get.dart';
-import 'package:work/app/modules/image_viewer/image_viewer.binding.dart';
 
 import '../modules/detail/detail.binding.dart';
 import '../modules/detail/detail.view.dart';
 import '../modules/detail/html/html.binding.dart';
 import '../modules/detail/html/html.view.dart';
+import '../modules/detail/markdown/markdown.binding.dart';
+import '../modules/detail/markdown/markdown.view.dart';
+import '../modules/detail/video/video.binding.dart';
+import '../modules/detail/video/video.view.dart';
+import '../modules/detail/webview/webview.binding.dart';
+import '../modules/detail/webview/webview.view.dart';
 import '../modules/home/home.binding.dart';
 import '../modules/home/home.view.dart';
+import '../modules/image_viewer/image_viewer.binding.dart';
 import '../modules/image_viewer/image_viewer.view.dart';
 import '../modules/sources/source_list/source_list.binding.dart';
 import '../modules/sources/source_list/source_list.view.dart';
@@ -47,6 +53,21 @@ class AppPages {
           name: _Paths.HTML,
           page: () => const HtmlView(),
           binding: HtmlBinding(),
+        ),
+        GetPage(
+          name: _Paths.WEBVIEW,
+          page: () => const WebviewView(),
+          binding: WebviewBinding(),
+        ),
+        GetPage(
+          name: _Paths.MARKDOWN,
+          page: () => const MarkdownView(),
+          binding: MarkdownBinding(),
+        ),
+        GetPage(
+          name: _Paths.VIDEO,
+          page: () => const VideoView(),
+          binding: VideoBinding(),
         ),
       ],
     ),
