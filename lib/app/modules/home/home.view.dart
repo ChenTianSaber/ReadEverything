@@ -260,27 +260,44 @@ class HomeView extends GetView<HomeController> {
                   // TODO 源名称 作者 时间
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // ClipRRect(
-                      //   borderRadius: BorderRadius.circular(20.0), // 设置圆角半径
-                      //   child: Image.network('https://picsum.photos/250?image=9', width: 20, height: 20),
-                      // ),
-                      // SizedBox(
-                      //   width: 8,
-                      // ),
-                      Text(
-                        "${source?.name?.isNotEmpty == true ? "${source?.name}@" : ""}${data.author}",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
+                      source?.icon?.isNotEmpty == true
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(20.0), // 设置圆角半径
+                              child: Image.network(source!.icon!, width: 20, height: 20),
+                            )
+                          : Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(color: Colors.redAccent, borderRadius: BorderRadius.circular(20)),
+                              child: Center(
+                                child: Text(
+                                  "${source?.name?.characters.first}",
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 8, color: Colors.white),
+                                ),
+                              ),
+                            ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Expanded(
+                        child: Text(
+                          "${data.author?.isNotEmpty == true ? data.author : source?.name}",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black54,
+                          ),
                         ),
                       ),
                       Text(
                         "${CommonUtils.formatDate(data.publishTime ?? DateTime.now().millisecondsSinceEpoch)} →",
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 14,
+                          fontSize: 12,
                           color: Colors.black45,
                         ),
                       ),
